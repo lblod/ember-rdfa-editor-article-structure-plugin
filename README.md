@@ -1,4 +1,4 @@
-# ember-rdfa-editor-besluit-plugin
+# ember-rdfa-editor-article-structure-plugin
 
 
 Plugin that provides some helpers for interacting with besluit inside GN
@@ -31,7 +31,7 @@ Installation
 ------------------------------------------------------------------------------
 
 ```
-ember install @lblod/ember-rdfa-editor-besluit-plugin
+ember install @lblod/ember-rdfa-editor-article-structure-plugin
 ```
 
 

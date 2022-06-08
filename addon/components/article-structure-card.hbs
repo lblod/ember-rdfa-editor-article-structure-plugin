@@ -1,0 +1,10 @@
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideArticle}}
+    {{on 'click' this.insertParagraph}}>
+    {{t "insert.paragraph"}}
+  </AuButton>
+</AuList::Item>
