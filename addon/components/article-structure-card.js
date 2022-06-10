@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { STRUCTURES } from '../utils/constants';
 
 export default class EditorPluginsTemplateVariableCardComponent extends Component {
   @tracked isOutsideArticle = true;
@@ -14,12 +15,25 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
     );
   }
 
+  get structures() {
+    return STRUCTURES;
+  }
+
   @action
   insertParagraph() {
     this.args.controller.executeCommand(
       'insert-paragraph',
       this.args.controller,
       this.articleUri
+    );
+  }
+
+  @action
+  insertStructure(structureName) {
+    this.args.controller.executeCommand(
+      'insert-article-structure',
+      this.args.controller,
+      structureName
     );
   }
 

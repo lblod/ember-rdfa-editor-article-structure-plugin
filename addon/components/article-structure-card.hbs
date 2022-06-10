@@ -8,3 +8,15 @@
     {{t "insert.paragraph"}}
   </AuButton>
 </AuList::Item>
+{{#each structures as |structure|}}
+  <AuList::Item>
+    <AuButton
+      @icon="add"
+      @iconAlignment="left"
+      @skin="link"
+      @disabled={{this.isOutsideArticleSection}}
+      {{on 'click' (fn this.insertStructure structure.title)}}>
+      Insert {{structure.title}}
+    </AuButton>
+  </AuList::Item>
+{{/each}}

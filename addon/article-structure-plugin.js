@@ -1,3 +1,4 @@
+import InsertArticleStructureCommand from './commands/insert-article-structure';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
 
 /**
@@ -33,6 +34,9 @@ export default class ArticleStructurePlugin {
     this.controller = controller;
     controller.registerCommand(
       new InsertParagraphCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new InsertArticleStructureCommand(controller._rawEditor._model)
     );
     controller.registerWidget({
       componentName: 'article-structure-card',
