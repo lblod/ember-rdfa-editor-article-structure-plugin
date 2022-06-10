@@ -83,9 +83,22 @@ export default class InsertArticleStructureCommand {
       this.model.change((mutator) => {
         mutator.insertNodes(rangeToInsert, structureNode);
       });
+      //TODO: make this with model elements if possible
+      const titleHtml = `
+        <span property="dct:title">${structureToAdd.title}</span>
+      `;
+      controller.executeCommand(
+        'insert-html',
+        titleHtml,
+        controller.rangeFactory.fromInNode(
+          structureNode,
+          0,
+          structureNode.getMaxOffset()
+        )
+      );
       const rangeToInsertChildrens = controller.rangeFactory.fromInNode(
         structureNode,
-        0,
+        1,
         structureNode.getMaxOffset()
       );
       this.model.change((mutator) => {
@@ -112,7 +125,7 @@ export default class InsertArticleStructureCommand {
         const structureUri = 'uriToTest';
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
-          ${structureToAdd.title}
+          <span property="dct:title">${structureToAdd.title}</span>
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
@@ -126,7 +139,7 @@ export default class InsertArticleStructureCommand {
         const structureUri = 'uriToTest';
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
-          ${structureToAdd.title}
+          <span property="dct:title">${structureToAdd.title}</span>
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
