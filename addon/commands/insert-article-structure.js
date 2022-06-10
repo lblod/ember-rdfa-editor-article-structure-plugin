@@ -17,6 +17,7 @@ export default class InsertArticleStructureCommand {
       (structure) => structure.title === structureName
     );
     const structureToAdd = STRUCTURES[structureToAddIndex];
+    const structureUri = `${structureToAdd.uriBase}${uuid()}}`;
     const limitedDatastore = controller.datastore.limitToRange(
       controller.selection.lastRange,
       'rangeIsInside'
@@ -39,6 +40,7 @@ export default class InsertArticleStructureCommand {
       }
     }
     if (!structureOfSameType) {
+      console.log('needs to wrap everything')
       // Needs to wrap everything
       const parentStructure = STRUCTURES[structureToAddIndex - 1];
       console.log('parent structure type');
@@ -50,11 +52,14 @@ export default class InsertArticleStructureCommand {
         .match(null, 'a', `>${parentStructureType}`)
         .asSubjectNodes()
         .next().value;
+      console.log(parentStructureObjectNode);
       let containerNode;
       if (parentStructure && parentStructureObjectNode) {
+        console.log('In the parent structure')
         //In the parent structure
         containerNode = [...parentStructureObjectNode.nodes][0];
       } else {
+        console.log('In the article container')
         //In the article container
         const besluit = limitedDatastore
           .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
@@ -76,7 +81,6 @@ export default class InsertArticleStructureCommand {
         0,
         containerNode.getMaxOffset()
       );
-      const structureUri = 'uriToTest';
       structureNode.setAttribute('property', 'ext:hasStructure');
       structureNode.setAttribute('typeof', structureToAdd.type);
       structureNode.setAttribute('resource', structureUri);
@@ -122,7 +126,6 @@ export default class InsertArticleStructureCommand {
           parentStructureElement.getMaxOffset(),
           parentStructureElement.getMaxOffset()
         );
-        const structureUri = 'uriToTest';
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
           <span property="dct:title">${structureToAdd.title}</span>
@@ -136,7 +139,6 @@ export default class InsertArticleStructureCommand {
           articleContainerNode.getMaxOffset(),
           articleContainerNode.getMaxOffset()
         );
-        const structureUri = 'uriToTest';
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
           <span property="dct:title">${structureToAdd.title}</span>
