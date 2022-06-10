@@ -57,7 +57,13 @@ export default class InsertArticleStructureCommand {
       if (parentStructure && parentStructureObjectNode) {
         console.log('In the parent structure')
         //In the parent structure
-        containerNode = [...parentStructureObjectNode.nodes][0];
+        const parentNode = [...parentStructureObjectNode.nodes][0];
+        for (let child of parentNode.children) {
+          if (child.attributeMap.get('property') === 'ext:content') {
+            containerNode = child;
+            break;
+          }
+        }
       } else {
         console.log('In the article container')
         //In the article container
@@ -84,6 +90,8 @@ export default class InsertArticleStructureCommand {
       structureNode.setAttribute('property', 'ext:hasStructure');
       structureNode.setAttribute('typeof', structureToAdd.type);
       structureNode.setAttribute('resource', structureUri);
+      const structureContent = controller.createModelElement('div');
+      structureContent.setAttribute('property', 'ext:content');
       this.model.change((mutator) => {
         mutator.insertNodes(rangeToInsert, structureNode);
       });
@@ -100,10 +108,18 @@ export default class InsertArticleStructureCommand {
           structureNode.getMaxOffset()
         )
       );
-      const rangeToInsertChildrens = controller.rangeFactory.fromInNode(
+      const rangeToInsertContent = controller.rangeFactory.fromInNode(
         structureNode,
-        1,
+        structureNode.getMaxOffset(),
         structureNode.getMaxOffset()
+      );
+      this.model.change((mutator) => {
+        mutator.insertNodes(rangeToInsertContent, structureContent);
+      });
+      const rangeToInsertChildrens = controller.rangeFactory.fromInNode(
+        structureContent,
+        0,
+        structureContent.getMaxOffset()
       );
       this.model.change((mutator) => {
         mutator.insertNodes(rangeToInsertChildrens, ...children);
@@ -120,15 +136,25 @@ export default class InsertArticleStructureCommand {
         .next().value;
       if (parentStructure && parentStructureObjectNode) {
         // Added to the parent structure
-        const parentStructureElement = [...parentStructureObjectNode.nodes][0];
+        const parentNode = [...parentStructureObjectNode.nodes][0];
+        let contentNode;
+        for (let child of parentNode.children) {
+          if (child.attributeMap.get('property') === 'ext:content') {
+            contentNode = child;
+            break;
+          }
+        }
         const rangeToInsert = controller.rangeFactory.fromInNode(
-          parentStructureElement,
-          parentStructureElement.getMaxOffset(),
-          parentStructureElement.getMaxOffset()
+          contentNode,
+          contentNode.getMaxOffset(),
+          contentNode.getMaxOffset()
         );
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
           <span property="dct:title">${structureToAdd.title}</span>
+          <div property="ext:content">
+            <span class="mark-highlight-manual">Voer inhoud in</span>
+          </div>
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
@@ -142,6 +168,9 @@ export default class InsertArticleStructureCommand {
         const structureHtml = `
         <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
           <span property="dct:title">${structureToAdd.title}</span>
+          <div property="ext:content">
+            <span class="mark-highlight-manual">Voer inhoud in</span>
+          </div>
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
