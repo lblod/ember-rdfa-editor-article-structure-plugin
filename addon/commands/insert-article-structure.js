@@ -17,7 +17,7 @@ export default class InsertArticleStructureCommand {
       (structure) => structure.title === structureName
     );
     const structureToAdd = STRUCTURES[structureToAddIndex];
-    const structureUri = `${structureToAdd.uriBase}${uuid()}}`;
+    const structureUri = `${structureToAdd.uriBase}${uuid()}`;
     const limitedDatastore = controller.datastore.limitToRange(
       controller.selection.lastRange,
       'rangeIsInside'
@@ -40,7 +40,7 @@ export default class InsertArticleStructureCommand {
       }
     }
     if (!structureOfSameType) {
-      console.log('needs to wrap everything')
+      console.log('needs to wrap everything');
       // Needs to wrap everything
       const parentStructure = STRUCTURES[structureToAddIndex - 1];
       console.log('parent structure type');
@@ -55,7 +55,7 @@ export default class InsertArticleStructureCommand {
       console.log(parentStructureObjectNode);
       let containerNode;
       if (parentStructure && parentStructureObjectNode) {
-        console.log('In the parent structure')
+        console.log('In the parent structure');
         //In the parent structure
         const parentNode = [...parentStructureObjectNode.nodes][0];
         for (let child of parentNode.children) {
@@ -65,7 +65,7 @@ export default class InsertArticleStructureCommand {
           }
         }
       } else {
-        console.log('In the article container')
+        console.log('In the article container');
         //In the article container
         const besluit = limitedDatastore
           .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
