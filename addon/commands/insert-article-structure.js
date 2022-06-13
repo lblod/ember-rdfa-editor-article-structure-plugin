@@ -1,6 +1,22 @@
 import { v4 as uuid } from 'uuid';
 import { STRUCTURES } from '../utils/constants';
 
+function searchForType(generalDatastore, limitedDatastore, type) {
+  return limitedDatastore
+    .match(null, 'a', null)
+    .transformDataset((dataset) => {
+      return dataset.filter((quad) => {
+        const match = generalDatastore
+          .match(`>${quad.subject.value}`, 'dct:type', `>${type}`)
+          .asSubjectNodes()
+          .next().value;
+        return Boolean(match);
+      });
+    })
+    .asSubjectNodes()
+    .next().value;
+}
+
 export default class InsertArticleStructureCommand {
   name = 'insert-article-structure';
 
@@ -22,11 +38,11 @@ export default class InsertArticleStructureCommand {
       controller.selection.lastRange,
       'rangeIsInside'
     );
-    const structureOfSameType = limitedDatastore
-      .match(null, 'a', `>${structureToAdd.type}`)
-      .asSubjectNodes()
-      .next().value;
-    console.log(structureOfSameType);
+    const structureOfSameType = searchForType(
+      controller.datastore,
+      limitedDatastore,
+      structureToAdd.type
+    );
     const besluit = limitedDatastore
       .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
       .asSubjectNodes()
@@ -40,32 +56,27 @@ export default class InsertArticleStructureCommand {
       }
     }
     if (!structureOfSameType) {
-      console.log('needs to wrap everything');
       // Needs to wrap everything
       const parentStructure = STRUCTURES[structureToAddIndex - 1];
-      console.log('parent structure type');
       const parentStructureType = parentStructure
         ? parentStructure.type
         : undefined;
-      console.log(parentStructureType);
-      const parentStructureObjectNode = limitedDatastore
-        .match(null, 'a', `>${parentStructureType}`)
-        .asSubjectNodes()
-        .next().value;
-      console.log(parentStructureObjectNode);
+      const parentStructureObjectNode = searchForType(
+        controller.datastore,
+        limitedDatastore,
+        parentStructureType
+      );
       let containerNode;
       if (parentStructure && parentStructureObjectNode) {
-        console.log('In the parent structure');
         //In the parent structure
         const parentNode = [...parentStructureObjectNode.nodes][0];
         for (let child of parentNode.children) {
-          if (child.attributeMap.get('property') === 'ext:content') {
+          if (child.attributeMap.get('property') === 'say:body') {
             containerNode = child;
             break;
           }
         }
       } else {
-        console.log('In the article container');
         //In the article container
         const besluit = limitedDatastore
           .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
@@ -79,7 +90,6 @@ export default class InsertArticleStructureCommand {
           }
         }
       }
-      console.log(containerNode);
       const children = [...containerNode.children];
       const structureNode = controller.createModelElement('div');
       const rangeToInsert = controller.rangeFactory.fromInNode(
@@ -87,17 +97,19 @@ export default class InsertArticleStructureCommand {
         0,
         containerNode.getMaxOffset()
       );
-      structureNode.setAttribute('property', 'ext:hasStructure');
-      structureNode.setAttribute('typeof', structureToAdd.type);
+      structureNode.setAttribute('property', 'say:hasPart');
+      structureNode.setAttribute('typeof', 'say:DocumentSubdivision');
       structureNode.setAttribute('resource', structureUri);
       const structureContent = controller.createModelElement('div');
-      structureContent.setAttribute('property', 'ext:content');
+      structureContent.setAttribute('property', 'say:body');
+      structureContent.setAttribute('datatype', 'rdf:XMLLiteral');
       this.model.change((mutator) => {
         mutator.insertNodes(rangeToInsert, structureNode);
       });
       //TODO: make this with model elements if possible
       const titleHtml = `
-        <span property="dct:title">${structureToAdd.title}</span>
+        <span property="dct:type" resource="${structureToAdd.type}"></span>
+        <span property="say:heading">${structureToAdd.title}</span>
       `;
       controller.executeCommand(
         'insert-html',
@@ -130,16 +142,17 @@ export default class InsertArticleStructureCommand {
       const parentStructureType = parentStructure
         ? parentStructure.type
         : undefined;
-      const parentStructureObjectNode = limitedDatastore
-        .match(null, 'a', `>${parentStructureType}`)
-        .asSubjectNodes()
-        .next().value;
+      const parentStructureObjectNode = searchForType(
+        controller.datastore,
+        limitedDatastore,
+        parentStructureType
+      );
       if (parentStructure && parentStructureObjectNode) {
         // Added to the parent structure
         const parentNode = [...parentStructureObjectNode.nodes][0];
         let contentNode;
         for (let child of parentNode.children) {
-          if (child.attributeMap.get('property') === 'ext:content') {
+          if (child.attributeMap.get('property') === 'say:body') {
             contentNode = child;
             break;
           }
@@ -150,9 +163,10 @@ export default class InsertArticleStructureCommand {
           contentNode.getMaxOffset()
         );
         const structureHtml = `
-        <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
-          <span property="dct:title">${structureToAdd.title}</span>
-          <div property="ext:content">
+        <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
+          <span property="dct:type" resource="${structureToAdd.type}"></span>
+          <span property="say:heading">${structureToAdd.title}</span>
+          <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
           </div>
         </div>
@@ -166,9 +180,10 @@ export default class InsertArticleStructureCommand {
           articleContainerNode.getMaxOffset()
         );
         const structureHtml = `
-        <div property="ext:hasStructure" typeof="${structureToAdd.type}" resource="${structureUri}">
-          <span property="dct:title">${structureToAdd.title}</span>
-          <div property="ext:content">
+        <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
+          <span property="dct:type" resource="${structureToAdd.type}"></span>
+          <span property="say:heading">${structureToAdd.title}</span>
+          <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
           </div>
         </div>
