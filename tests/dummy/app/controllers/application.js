@@ -45,14 +45,20 @@ export default class ApplicationController extends Controller {
     <h5>Beslissing</h5>
    
     <div property="prov:value" datatype="xsd:string">
-      <div property="eli:has_part" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="besluit:Artikel">
-        <div>Artikel <span property="eli:number" datatype="xsd:string">1</span></div>
-        <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
-        <div property="prov:value" datatype="xsd:string">
-          <span class="mark-highlight-manual">Voer inhoud in</span>
+    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
+    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span>
+      <div property="say:body" datatype="rdf:XMLLiteral">
+        <div property="eli:has_part" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="besluit:Artikel">
+            <div>Artikel <span property="eli:number" datatype="xsd:string">1</span></div>
+            <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
+            <div property="prov:value" datatype="xsd:string">
+              <span class="mark-highlight-manual">Voer inhoud in</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
    </div>`;
     controller.setHtmlContent(presetContent);
     const editorDone = new CustomEvent('editor-done');

@@ -1,5 +1,6 @@
 import InsertArticleStructureCommand from './commands/insert-article-structure';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
+import MoveArticleCommand from './commands/move-article-command';
 
 /**
  * Entry point for ArticleStructurePlugin
@@ -37,6 +38,9 @@ export default class ArticleStructurePlugin {
     );
     controller.registerCommand(
       new InsertArticleStructureCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new MoveArticleCommand(controller._rawEditor._model)
     );
     controller.registerWidget({
       componentName: 'article-structure-card',

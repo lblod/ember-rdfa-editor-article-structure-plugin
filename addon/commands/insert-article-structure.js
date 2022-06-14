@@ -1,21 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { STRUCTURES } from '../utils/constants';
-
-function searchForType(generalDatastore, limitedDatastore, type) {
-  return limitedDatastore
-    .match(null, 'a', null)
-    .transformDataset((dataset) => {
-      return dataset.filter((quad) => {
-        const match = generalDatastore
-          .match(`>${quad.subject.value}`, 'dct:type', `>${type}`)
-          .asSubjectNodes()
-          .next().value;
-        return Boolean(match);
-      });
-    })
-    .asSubjectNodes()
-    .next().value;
-}
+import searchForType from '../utils/searchForType';
 
 export default class InsertArticleStructureCommand {
   name = 'insert-article-structure';

@@ -1,3 +1,6 @@
 insert:
   paragraph: Insert paragraph
+move:
+  articleUp: Move Article Up
+  articleDown: Move Article Down
 

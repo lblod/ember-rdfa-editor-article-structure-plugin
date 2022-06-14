@@ -8,13 +8,33 @@
     {{t "insert.paragraph"}}
   </AuButton>
 </AuList::Item>
-{{#each structures as |structure|}}
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideArticle}}
+    {{on 'click' (fn this.moveArticle true)}}>
+    {{t "move.articleUp"}}
+  </AuButton>
+</AuList::Item>
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideArticle}}
+    {{on 'click' (fn this.moveArticle false)}}>
+    {{t "move.articleDown"}}
+  </AuButton>
+</AuList::Item>
+{{#each this.structures as |structure|}}
   <AuList::Item>
     <AuButton
       @icon="add"
       @iconAlignment="left"
       @skin="link"
-      @disabled={{this.isOutsideArticleSection}}
+      @disabled={{false}}
       {{on 'click' (fn this.insertStructure structure.title)}}>
       Insert {{structure.title}}
     </AuButton>
