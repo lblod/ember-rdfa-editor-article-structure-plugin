@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 
 export default class ApplicationController extends Controller {
-  plugins = ['besluit', 'article-structure'];
+  plugins = ['article-structure'];
 
   @action
   rdfaEditorInit(controller) {
@@ -45,7 +45,7 @@ export default class ApplicationController extends Controller {
     <h5>Beslissing</h5>
    
     <div property="prov:value" datatype="xsd:string">
-    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
+    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce35"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
     <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span>
       <div property="say:body" datatype="rdf:XMLLiteral">
         <div property="eli:has_part" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="besluit:Artikel">
@@ -57,8 +57,8 @@ export default class ApplicationController extends Controller {
           </div>
         </div>
       </div>
+      <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5303cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
     </div>
-    <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="http://data.lblod.info/sections/60211c08-c1af-4c5c-ad89-54c5803cce25"><span property="dct:type" resource="http://mu.semte.ch/vocabularies/ext/Section"></span><span property="say:heading">Section</span><div property="say:body" datatype="rdf:XMLLiteral"><span class="mark-highlight-manual">Voer inhoud in</span></div></div>
    </div>`;
     controller.setHtmlContent(presetContent);
     const editorDone = new CustomEvent('editor-done');

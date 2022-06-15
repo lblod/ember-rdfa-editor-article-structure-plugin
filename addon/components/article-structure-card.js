@@ -19,6 +19,11 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
   }
 
   @action
+  insertArticle() {
+    this.args.controller.executeCommand('insert-article', this.args.controller);
+  }
+
+  @action
   insertParagraph() {
     this.args.controller.executeCommand(
       'insert-paragraph',
@@ -72,14 +77,11 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
       'rangeIsInside'
     );
     for (let i = 1; i < STRUCTURES.length; i++) {
-      console.log('searching for')
-      console.log(STRUCTURES[i - 1].type);
       const parentType = searchForType(
         this.args.controller.datastore,
         limitedDatastore,
         STRUCTURES[i - 1].type
       );
-      console.log(parentType)
       if (parentType) {
         newStructures[i].disabled = false;
       } else {

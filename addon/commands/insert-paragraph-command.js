@@ -18,7 +18,6 @@ export default class InsertParagraphCommand {
       .next().value;
     const articleContentElement = [...articleContentObjectNode.nodes][0];
     const paragraphUri = `http://data.lblod.info/paragraph/${uuid()}`;
-    console.log(articleContentElement);
     if (
       articleContentElement.children.length > 1 ||
       articleContentElement.children[0].attributeMap.get('typeof') ===

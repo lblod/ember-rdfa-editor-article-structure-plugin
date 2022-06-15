@@ -101,7 +101,6 @@ export default class MoveArticleCommand {
             structureContent.getMaxOffset()
           );
         }
-       
         const insertArticle = articleNode.clone();
         this.model.change((mutator) => {
           mutator.insertNodes(insertRange, insertArticle);

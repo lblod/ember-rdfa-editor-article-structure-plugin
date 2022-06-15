@@ -1,4 +1,5 @@
-import InsertArticleStructureCommand from './commands/insert-article-structure';
+import InsertArticleCommand from './commands/insert-article-command';
+import InsertArticleStructureCommand from './commands/insert-article-structure-command';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
 import MoveArticleCommand from './commands/move-article-command';
 
@@ -33,6 +34,9 @@ export default class ArticleStructurePlugin {
 
   initialize(controller) {
     this.controller = controller;
+    controller.registerCommand(
+      new InsertArticleCommand(controller._rawEditor._model)
+    );
     controller.registerCommand(
       new InsertParagraphCommand(controller._rawEditor._model)
     );
