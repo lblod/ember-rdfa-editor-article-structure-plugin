@@ -83,11 +83,25 @@ export default class MoveArticleCommand {
         const structureContent = nodeToInsert.children.filter(
           (child) => child.getAttribute('property') === 'say:body'
         )[0];
-        const insertRange = controller.rangeFactory.fromInNode(
-          structureContent,
-          structureContent.getMaxOffset(),
-          structureContent.getMaxOffset()
-        );
+        let insertRange;
+        if (
+          structureContent.children.length === 1 &&
+          structureContent.children[0].getAttribute('class') ===
+            'mark-highlight-manual'
+        ) {
+          insertRange = controller.rangeFactory.fromInNode(
+            structureContent,
+            0,
+            structureContent.getMaxOffset()
+          );
+        } else {
+          insertRange = controller.rangeFactory.fromInNode(
+            structureContent,
+            structureContent.getMaxOffset(),
+            structureContent.getMaxOffset()
+          );
+        }
+       
         const insertArticle = articleNode.clone();
         this.model.change((mutator) => {
           mutator.insertNodes(insertRange, insertArticle);
