@@ -29,8 +29,11 @@ export default class InsertArticleCommand {
             return 0; // We accept the result
           }
         } else {
+          console.log(node);
           const isArticleContainer =
-            node.getAttribute('property') === 'prov:value';
+            node.getAttribute('property') === 'prov:value' &&
+            (!node.parent ||
+              node.parent.getAttribute('typeof') !== 'besluit:Artikel');
           if (isArticleContainer) {
             const substructures = node.children.filter(
               (child) =>
