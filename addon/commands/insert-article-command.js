@@ -29,7 +29,6 @@ export default class InsertArticleCommand {
             return 0; // We accept the result
           }
         } else {
-          console.log(node);
           const isArticleContainer =
             node.getAttribute('property') === 'prov:value' &&
             (!node.parent ||
