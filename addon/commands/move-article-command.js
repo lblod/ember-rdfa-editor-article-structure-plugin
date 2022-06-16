@@ -39,11 +39,11 @@ export default class MoveArticleCommand {
         mutator.insertNodes(articleBRange, articleAToInsert);
         mutator.insertNodes(articleARange, articleBToInsert);
       });
-      /*controller.executeCommand(
+      controller.executeCommand(
         'recalculate-article-numbers',
         controller,
-        besluitUri
-      );*/
+        articleContainer
+      );
       this.model.change(() => {
         const range = controller.rangeFactory.fromInElement(
           articleAToInsert,
@@ -106,6 +106,16 @@ export default class MoveArticleCommand {
           mutator.insertNodes(insertRange, insertArticle);
           mutator.deleteNode(articleNode);
         });
+        controller.executeCommand(
+          'recalculate-article-numbers',
+          controller,
+          articleContainer
+        );
+        controller.executeCommand(
+          'recalculate-article-numbers',
+          controller,
+          structureContent
+        );
       }
     }
   }
