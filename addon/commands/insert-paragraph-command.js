@@ -25,7 +25,11 @@ export default class InsertParagraphCommand {
     ) {
       const paragraphHtml = `
         <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
-          §
+          § 
+          <span property="eli:number" datatype="xsd:string"> 
+            ${this.generateParagraphNumber(articleContentElement)}
+          </span>
+          <span class="mark-highlight-manual">Voer inhoud in</span>
         </div>
       `;
       controller.executeCommand(
@@ -40,9 +44,13 @@ export default class InsertParagraphCommand {
     } else {
       const paragraphHtml = `
         <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
-          § ${articleContentElement.innerHtml}
+          § 
+          <span property="eli:number" datatype="xsd:string"> 
+            1
+          </span>
         </div>
       `;
+      const children = [...articleContentElement.children];
       controller.executeCommand(
         'insert-html',
         paragraphHtml,
@@ -52,6 +60,21 @@ export default class InsertParagraphCommand {
           articleContentElement.getMaxOffset()
         )
       );
+      const paragraphInserted = [
+        ...controller.datastore
+          .match(`>${paragraphUri}`, null, null)
+          .asSubjectNodes()
+          .next().value.nodes,
+      ][0];
+      const rangeToInsertContent = controller.rangeFactory.fromInNode(
+        paragraphInserted,
+        paragraphInserted.getMaxOffset(),
+        paragraphInserted.getMaxOffset()
+      );
+      this.model.change((mutator) => {
+        mutator.insertNodes(rangeToInsertContent, ...children);
+      });
+      return;
     }
     const newParagraphElementSubjectNodes = controller.datastore
       .match(`>${paragraphUri}`, null, null)
@@ -68,5 +91,11 @@ export default class InsertParagraphCommand {
         controller.selection.selectRange(range);
       });
     }
+  }
+  generateParagraphNumber(container) {
+    const substructures = container.children.filter(
+      (node) => node.getAttribute('typeof') === 'ext:Paragraph'
+    );
+    return substructures.length + 1;
   }
 }
