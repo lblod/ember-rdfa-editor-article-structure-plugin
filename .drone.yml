@@ -25,6 +25,9 @@ steps:
   failure: ignore
   commands:
   - npm run test:ember
+trigger:
+  event:
+    - pull_request
 ---
 kind: pipeline
 type: docker
