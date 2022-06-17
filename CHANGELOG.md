@@ -2,6 +2,10 @@
 
 
 
+## 0.1.0 (2022-06-17)
+initial release
+
+
 ## 0.4.0 (2022-05-05)
 
 #### :rocket: Enhancement
