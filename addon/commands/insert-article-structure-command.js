@@ -100,7 +100,7 @@ export default class InsertArticleStructureCommand {
             1
           </span>
           :
-          <span class="mark-highlight-manual">Voer inhoud in</span>
+          <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
         </span>
       `;
       controller.executeCommand(
@@ -163,7 +163,7 @@ export default class InsertArticleStructureCommand {
               ${this.generateStructureNumber(contentNode)}
             </span>
             :
-            <span class="mark-highlight-manual">Voer inhoud in</span>
+            <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </span>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
@@ -187,7 +187,7 @@ export default class InsertArticleStructureCommand {
               ${this.generateStructureNumber(articleContainerNode)}
             </span>
             :
-            <span class="mark-highlight-manual">Voer inhoud in</span>
+            <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </span>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
@@ -197,6 +197,19 @@ export default class InsertArticleStructureCommand {
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
       }
     }
+    const titleNode = controller.datastore
+      .match(`>${structureUri}`, 'ext:title', null)
+      .asPredicateNodeMapping()
+      .single().nodes[0];
+    console.log(titleNode);
+    this.model.change(() => {
+      const range = controller.rangeFactory.fromInElement(
+        titleNode,
+        0,
+        titleNode.getMaxOffset()
+      );
+      controller.selection.selectRange(range);
+    });
   }
   generateStructureNumber(container) {
     const substructures = container.children.filter(
