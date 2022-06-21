@@ -7,6 +7,8 @@ import searchForType from '../utils/searchForType';
 export default class EditorPluginsTemplateVariableCardComponent extends Component {
   @tracked isOutsideArticle = true;
   @tracked articleUri = undefined;
+  @tracked isOutsideParagrah = true;
+  @tracked paragrahUri = undefined;
   @tracked structures = [];
 
   constructor() {
@@ -42,6 +44,16 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
   }
 
   @action
+  moveParagraph(moveUp) {
+    this.args.controller.executeCommand(
+      'move-paragraph',
+      this.args.controller,
+      this.paragrahUri,
+      moveUp
+    );
+  }
+
+  @action
   insertStructure(structureName) {
     this.args.controller.executeCommand(
       'insert-article-structure',
@@ -66,6 +78,18 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
     } else {
       this.isOutsideArticle = false;
       this.articleUri = article.subject.value;
+    }
+
+    const paragraph = limitedDatastore
+      .match(null, 'a', 'ext:Paragraph')
+      .asQuads()
+      .next().value;
+    if (!paragraph) {
+      this.isOutsideParagrah = true;
+      this.paragrahUri = undefined;
+    } else {
+      this.isOutsideParagrah = false;
+      this.paragrahUri = paragraph.subject.value;
     }
     this.checkStructures();
   }

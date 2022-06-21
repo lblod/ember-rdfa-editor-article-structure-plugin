@@ -201,7 +201,6 @@ export default class InsertArticleStructureCommand {
       .match(`>${structureUri}`, 'ext:title', null)
       .asPredicateNodeMapping()
       .single().nodes[0];
-    console.log(titleNode);
     this.model.change(() => {
       const range = controller.rangeFactory.fromInElement(
         titleNode,

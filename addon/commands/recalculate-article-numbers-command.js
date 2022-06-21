@@ -18,6 +18,7 @@ export default class RecalculateArticleNumbersCommand {
       .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
       .asPredicateNodes()
       .next().value;
+    if (!articles) return;
     const articlesArray = [...articles.nodes];
     for (let i = 0; i < articlesArray.length; i++) {
       const article = articlesArray[i];

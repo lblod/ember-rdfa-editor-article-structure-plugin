@@ -4,4 +4,6 @@ insert:
 move:
   articleUp: Move Article Up
   articleDown: Move Article Down
+  paragraphUp: Move Paragraph Up
+  paragraphDown: Move Paragraph Down
 
