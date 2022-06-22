@@ -58,6 +58,26 @@
     {{t "move.paragraphDown"}}
   </AuButton>
 </AuList::Item>
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideStructure}}
+    {{on 'click' (fn this.moveStructure true)}}>
+    {{t "move.structureUp"}}
+  </AuButton>
+</AuList::Item>
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideStructure}}
+    {{on 'click' (fn this.moveStructure false)}}>
+    {{t "move.structureDown"}}
+  </AuButton>
+</AuList::Item>
 {{#each this.structures as |structure|}}
   <AuList::Item>
     <AuButton

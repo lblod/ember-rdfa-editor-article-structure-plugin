@@ -18,7 +18,7 @@ export default class RecalculateParagraphNumbersCommand {
       .match(null, 'a', 'ext:Paragraph')
       .asPredicateNodes()
       .next().value;
-    if(!paragraphs) continue;
+    if (!paragraphs) return;
     const paragraphsArray = [...paragraphs.nodes];
     for (let i = 0; i < paragraphsArray.length; i++) {
       const paragraph = paragraphsArray[i];

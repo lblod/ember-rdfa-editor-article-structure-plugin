@@ -6,4 +6,6 @@ move:
   articleDown: Move Article Down
   paragraphUp: Move Paragraph Up
   paragraphDown: Move Paragraph Down
+  structureUp: Move Structure Up
+  structureDown: Move Structure Down
 

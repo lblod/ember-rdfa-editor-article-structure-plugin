@@ -3,8 +3,10 @@ import InsertArticleStructureCommand from './commands/insert-article-structure-c
 import InsertParagraphCommand from './commands/insert-paragraph-command';
 import MoveArticleCommand from './commands/move-article-command';
 import MoveParagraphCommand from './commands/move-paragraph-command';
+import MoveStructureCommand from './commands/move-structure-command';
 import RecalculateArticleNumbersCommand from './commands/recalculate-article-numbers-command';
 import RecalculateParagraphNumbersCommand from './commands/recalculate-paragraph-numbers-command';
+import RecalculateStructureNumbersCommand from './commands/recalculate-structure-numbers-command';
 
 /**
  * Entry point for ArticleStructurePlugin
@@ -57,6 +59,12 @@ export default class ArticleStructurePlugin {
     );
     controller.registerCommand(
       new RecalculateParagraphNumbersCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new MoveStructureCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new RecalculateStructureNumbersCommand(controller._rawEditor._model)
     );
     controller.registerWidget({
       componentName: 'article-structure-card',

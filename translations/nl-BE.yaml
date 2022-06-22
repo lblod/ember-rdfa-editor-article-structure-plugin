@@ -4,3 +4,5 @@ insert:
 move:
   articleUp: need translation
   articleDown: need translation
+  paragraphUp: need translation
+  paragraphDown: need translation

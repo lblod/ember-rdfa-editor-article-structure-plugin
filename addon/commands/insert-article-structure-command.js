@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { STRUCTURES } from '../utils/constants';
 import searchForType from '../utils/searchForType';
+import romanize from '../utils/romanize';
 
 export default class InsertArticleStructureCommand {
   name = 'insert-article-structure';
@@ -214,46 +215,6 @@ export default class InsertArticleStructureCommand {
     const substructures = container.children.filter(
       (node) => node.getAttribute('typeof') === 'say:DocumentSubdivision'
     );
-    return this.romanize(substructures.length + 1);
-  }
-  romanize(num) {
-    if (isNaN(num)) return NaN;
-    let digits = String(+num).split('');
-    let key = [
-      '',
-      'C',
-      'CC',
-      'CCC',
-      'CD',
-      'D',
-      'DC',
-      'DCC',
-      'DCCC',
-      'CM',
-      '',
-      'X',
-      'XX',
-      'XXX',
-      'XL',
-      'L',
-      'LX',
-      'LXX',
-      'LXXX',
-      'XC',
-      '',
-      'I',
-      'II',
-      'III',
-      'IV',
-      'V',
-      'VI',
-      'VII',
-      'VIII',
-      'IX',
-    ];
-    let roman = '';
-    let i = 3;
-    while (i--) roman = (key[+digits.pop() + i * 10] || '') + roman;
-    return Array(+digits.join('') + 1).join('M') + roman;
+    return romanize(substructures.length + 1);
   }
 }

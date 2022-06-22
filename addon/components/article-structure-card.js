@@ -9,6 +9,8 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
   @tracked articleUri = undefined;
   @tracked isOutsideParagrah = true;
   @tracked paragrahUri = undefined;
+  @tracked isOutsideStructure = true;
+  @tracked structureUri = undefined;
   @tracked structures = [];
 
   constructor() {
@@ -54,6 +56,16 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
   }
 
   @action
+  moveStructure(moveUp) {
+    this.args.controller.executeCommand(
+      'move-structure',
+      this.args.controller,
+      this.structureUri,
+      moveUp
+    );
+  }
+
+  @action
   insertStructure(structureName) {
     this.args.controller.executeCommand(
       'insert-article-structure',
@@ -90,6 +102,25 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
     } else {
       this.isOutsideParagrah = false;
       this.paragrahUri = paragraph.subject.value;
+    }
+
+    const documentMatches = limitedDatastore
+      .match(null, 'a', '>https://say.data.gift/ns/DocumentSubdivision')
+      .asPredicateNodeMapping()
+      .single();
+    if (
+      documentMatches &&
+      documentMatches.nodes &&
+      documentMatches.nodes.length
+    ) {
+      const structure = documentMatches.nodes.pop();
+      if (!structure) {
+        this.isOutsideStructure = true;
+        this.structureUri = undefined;
+      } else {
+        this.isOutsideStructure = false;
+        this.structureUri = structure.getAttribute('resource');
+      }
     }
     this.checkStructures();
   }
