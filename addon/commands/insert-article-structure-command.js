@@ -95,14 +95,13 @@ export default class InsertArticleStructureCommand {
       //TODO: make this with model elements if possible
       const titleHtml = `
         <span property="dct:type" resource="${structureToAdd.type}"></span>
-        <span property="say:heading">
-          ${structureToAdd.title} 
+        <${structureToAdd.heading} property="say:heading">
           <span property="eli:number" datatype="xsd:string"> 
             I
           </span>
           :
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
-        </span>
+        </${structureToAdd.heading}>
       `;
       controller.executeCommand(
         'insert-html',
@@ -158,14 +157,13 @@ export default class InsertArticleStructureCommand {
         const structureHtml = `
         <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
           <span property="dct:type" resource="${structureToAdd.type}"></span>
-          <span property="say:heading">
-            ${structureToAdd.title} 
+          <${structureToAdd.heading} property="say:heading">
             <span property="eli:number" datatype="xsd:string"> 
               ${this.generateStructureNumber(contentNode)}
             </span>
             :
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
-          </span>
+          </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
           </div>
@@ -182,14 +180,13 @@ export default class InsertArticleStructureCommand {
         const structureHtml = `
         <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
           <span property="dct:type" resource="${structureToAdd.type}"></span>
-          <span property="say:heading">
-            ${structureToAdd.title} 
+          <${structureToAdd.heading} property="say:heading">
             <span property="eli:number" datatype="xsd:string"> 
               ${this.generateStructureNumber(articleContainerNode)}
             </span>
             :
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
-          </span>
+          </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
           </div>

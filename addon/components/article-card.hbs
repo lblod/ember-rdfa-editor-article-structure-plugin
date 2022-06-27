@@ -1,0 +1,30 @@
+{{#unless this.isOutsideArticle}}
+  <AuCard @flex={{true}} @divided={{true}} @isOpenInitially={{true}} @expandable={{true}} @shadow={{true}} @size="small" as |c|>
+    <c.header>
+      <AuHeading @level="3" @skin="6">{{t "title.articleCard"}}</AuHeading>
+    </c.header>
+    <c.content>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideArticle}}
+          {{on 'click' (fn this.moveArticle true)}}>
+          {{t "move.articleUp"}}
+        </AuButton>
+      </AuList::Item>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideArticle}}
+          {{on 'click' (fn this.moveArticle false)}}>
+          {{t "move.articleDown"}}
+        </AuButton>
+      </AuList::Item>
+    </c.content>
+  </AuCard>
+{{/unless}}
+

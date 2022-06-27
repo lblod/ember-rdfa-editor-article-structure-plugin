@@ -1,0 +1,29 @@
+{{#unless this.isOutsideParagraph}}
+  <AuCard @flex={{true}} @divided={{true}} @isOpenInitially={{true}} @expandable={{true}} @shadow={{true}} @size="small" as |c|>
+    <c.header>
+      <AuHeading @level="3" @skin="6">{{t "title.paragraphCard"}}</AuHeading>
+    </c.header>
+    <c.content>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideParagraph}}
+          {{on 'click' (fn this.moveParagraph true)}}>
+          {{t "move.paragraphUp"}}
+        </AuButton>
+      </AuList::Item>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideParagraph}}
+          {{on 'click' (fn this.moveParagraph false)}}>
+          {{t "move.paragraphDown"}}
+        </AuButton>
+      </AuList::Item>
+    </c.content>
+  </AuCard>
+{{/unless}}

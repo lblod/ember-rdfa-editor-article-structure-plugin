@@ -8,4 +8,8 @@ move:
   paragraphDown: Move Paragraph Down
   structureUp: Move Structure Up
   structureDown: Move Structure Down
+title:
+  paragraphCard: Paragraph Card
+  articleCard: Article Card
+  structureCard: Structure Card
 

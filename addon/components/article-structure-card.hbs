@@ -18,66 +18,6 @@
     {{t "insert.paragraph"}}
   </AuButton>
 </AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideArticle}}
-    {{on 'click' (fn this.moveArticle true)}}>
-    {{t "move.articleUp"}}
-  </AuButton>
-</AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideArticle}}
-    {{on 'click' (fn this.moveArticle false)}}>
-    {{t "move.articleDown"}}
-  </AuButton>
-</AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideParagraph}}
-    {{on 'click' (fn this.moveParagraph true)}}>
-    {{t "move.paragraphUp"}}
-  </AuButton>
-</AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideParagraph}}
-    {{on 'click' (fn this.moveParagraph false)}}>
-    {{t "move.paragraphDown"}}
-  </AuButton>
-</AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideStructure}}
-    {{on 'click' (fn this.moveStructure true)}}>
-    {{t "move.structureUp"}}
-  </AuButton>
-</AuList::Item>
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideStructure}}
-    {{on 'click' (fn this.moveStructure false)}}>
-    {{t "move.structureDown"}}
-  </AuButton>
-</AuList::Item>
 {{#each this.structures as |structure|}}
   <AuList::Item>
     <AuButton

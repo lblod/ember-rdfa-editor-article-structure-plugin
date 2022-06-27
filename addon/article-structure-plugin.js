@@ -71,5 +71,20 @@ export default class ArticleStructurePlugin {
       identifier: 'article-structure-plugin/card',
       desiredLocation: 'insertSidebar',
     });
+    controller.registerWidget({
+      componentName: 'paragraph-card',
+      identifier: 'article-structure-plugin/paragraph-card',
+      desiredLocation: 'sidebar',
+    });
+    controller.registerWidget({
+      componentName: 'article-card',
+      identifier: 'article-structure-plugin/article-card',
+      desiredLocation: 'sidebar',
+    });
+    controller.registerWidget({
+      componentName: 'structure-card',
+      identifier: 'article-structure-plugin/structure-card',
+      desiredLocation: 'sidebar',
+    });
   }
 }

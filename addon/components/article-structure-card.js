@@ -7,8 +7,6 @@ import searchForType from '../utils/searchForType';
 export default class EditorPluginsTemplateVariableCardComponent extends Component {
   @tracked isOutsideArticle = true;
   @tracked articleUri = undefined;
-  @tracked isOutsideParagrah = true;
-  @tracked paragrahUri = undefined;
   @tracked isOutsideStructure = true;
   @tracked structureUri = undefined;
   @tracked structures = [];
@@ -33,35 +31,6 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
       'insert-paragraph',
       this.args.controller,
       this.articleUri
-    );
-  }
-  @action
-  moveArticle(moveUp) {
-    this.args.controller.executeCommand(
-      'move-article',
-      this.args.controller,
-      this.articleUri,
-      moveUp
-    );
-  }
-
-  @action
-  moveParagraph(moveUp) {
-    this.args.controller.executeCommand(
-      'move-paragraph',
-      this.args.controller,
-      this.paragrahUri,
-      moveUp
-    );
-  }
-
-  @action
-  moveStructure(moveUp) {
-    this.args.controller.executeCommand(
-      'move-structure',
-      this.args.controller,
-      this.structureUri,
-      moveUp
     );
   }
 
@@ -90,18 +59,6 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
     } else {
       this.isOutsideArticle = false;
       this.articleUri = article.subject.value;
-    }
-
-    const paragraph = limitedDatastore
-      .match(null, 'a', 'ext:Paragraph')
-      .asQuads()
-      .next().value;
-    if (!paragraph) {
-      this.isOutsideParagrah = true;
-      this.paragrahUri = undefined;
-    } else {
-      this.isOutsideParagrah = false;
-      this.paragrahUri = paragraph.subject.value;
     }
 
     const documentMatches = limitedDatastore

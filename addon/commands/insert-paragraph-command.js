@@ -25,10 +25,9 @@ export default class InsertParagraphCommand {
     ) {
       const paragraphHtml = `
         <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
-          § 
-          <span property="eli:number" datatype="xsd:string"> 
-            ${this.generateParagraphNumber(articleContentElement)}
-          </span>
+          §<span property="eli:number" datatype="xsd:string">${this.generateParagraphNumber(
+            articleContentElement
+          )}</span>.
           <span class="mark-highlight-manual">Voer inhoud in</span>
         </div>
       `;
@@ -44,10 +43,7 @@ export default class InsertParagraphCommand {
     } else {
       const paragraphHtml = `
         <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
-          § 
-          <span property="eli:number" datatype="xsd:string"> 
-            1
-          </span>
+          §<span property="eli:number" datatype="xsd:string">1</span>. 
         </div>
       `;
       const children = [...articleContentElement.children];

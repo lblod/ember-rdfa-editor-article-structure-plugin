@@ -1,0 +1,30 @@
+{{#unless this.isOutsideStructure}}
+  <AuCard @flex={{true}} @divided={{true}} @isOpenInitially={{true}} @expandable={{true}} @shadow={{true}} @size="small" as |c|>
+    <c.header>
+      <AuHeading @level="3" @skin="6">{{t "title.structureCard"}}</AuHeading>
+    </c.header>
+    <c.content>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideStructure}}
+          {{on 'click' (fn this.moveStructure true)}}>
+          {{t "move.structureUp"}}
+        </AuButton>
+      </AuList::Item>
+      <AuList::Item>
+        <AuButton
+          @icon="add"
+          @iconAlignment="left"
+          @skin="link"
+          @disabled={{this.isOutsideStructure}}
+          {{on 'click' (fn this.moveStructure false)}}>
+          {{t "move.structureDown"}}
+        </AuButton>
+      </AuList::Item>
+    </c.content>
+  </AuCard>
+{{/unless}}
+
