@@ -39,11 +39,7 @@ export default class MoveArticleCommand {
         mutator.insertNodes(articleBRange, articleAToInsert);
         mutator.insertNodes(articleARange, articleBToInsert);
       });
-      controller.executeCommand(
-        'recalculate-article-numbers',
-        controller,
-        articleContainer
-      );
+      controller.executeCommand('recalculate-article-numbers', controller);
       this.model.change(() => {
         const range = controller.rangeFactory.fromInElement(
           articleAToInsert,
@@ -118,16 +114,7 @@ export default class MoveArticleCommand {
             )
           );
         }
-        controller.executeCommand(
-          'recalculate-article-numbers',
-          controller,
-          articleContainer
-        );
-        controller.executeCommand(
-          'recalculate-article-numbers',
-          controller,
-          structureContent
-        );
+        controller.executeCommand('recalculate-article-numbers', controller);
         this.model.change(() => {
           const range = controller.rangeFactory.fromInElement(
             insertArticle,

@@ -11,7 +11,7 @@ export default class InsertArticleCommand {
     return true;
   }
 
-  execute(controller, articleContent, articleNumber) {
+  execute(controller, articleContent) {
     const treeWalker = new controller.treeWalkerFactory({
       root: controller.modelRoot,
       start: controller.selection.lastRange._start.parentElement,
@@ -71,11 +71,7 @@ export default class InsertArticleCommand {
         <div>
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 
-            ${
-              articleNumber
-                ? articleNumber
-                : this.generateArticleNumber(controller)
-            }
+            <span class="mark-highlight-manual">Voer inhoud in</span>
           </span>
           :
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
@@ -95,6 +91,7 @@ export default class InsertArticleCommand {
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
+    controller.executeCommand('recalculate-article-numbers', controller);
     if (newArticleElementSubjectNodes) {
       const newArticleElement = [...newArticleElementSubjectNodes.nodes][0];
       const range = controller.rangeFactory.fromInElement(
@@ -105,25 +102,6 @@ export default class InsertArticleCommand {
       this.model.change(() => {
         controller.selection.selectRange(range);
       });
-    }
-  }
-  generateArticleNumber(controller) {
-    const numberQuads = [
-      ...controller.datastore
-        .match(null, '>http://data.europa.eu/eli/ontology#number', null)
-        .asQuads(),
-    ];
-    let biggerNumber;
-    for (let numberQuad of numberQuads) {
-      const number = Number(this.removeZeroWidthSpace(numberQuad.object.value));
-      if (!Number.isNaN(number) && (number > biggerNumber || !biggerNumber)) {
-        biggerNumber = number;
-      }
-    }
-    if (biggerNumber) {
-      return biggerNumber + 1;
-    } else {
-      return '<span class="mark-highlight-manual">nummer</span>';
     }
   }
   removeZeroWidthSpace(text) {

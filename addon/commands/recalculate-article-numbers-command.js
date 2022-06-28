@@ -9,12 +9,8 @@ export default class RecalculateArticleNumbersCommand {
     return true;
   }
 
-  execute(controller, container) {
+  execute(controller) {
     const articles = controller.datastore
-      .limitToRange(
-        controller.rangeFactory.fromAroundNode(container),
-        'rangeContains'
-      )
       .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
       .asPredicateNodes()
       .next().value;
