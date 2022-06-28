@@ -23,6 +23,17 @@ export default class EditorPluginsParagraphCardComponent extends Component {
       moveUp
     );
   }
+
+  @action
+  removeParagraph() {
+    this.args.controller.executeCommand(
+      'delete-node-from-uri',
+      this.args.controller,
+      this.paragrahUri,
+      'paragraph'
+    );
+  }
+
   @action
   selectionChangedHandler() {
     const limitedDatastore = this.args.controller.datastore.limitToRange(

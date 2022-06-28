@@ -12,4 +12,8 @@ title:
   paragraphCard: Paragraph Card
   articleCard: Article Card
   structureCard: Structure Card
+remove:
+  article: Remove Article
+  paragraph: Remove Paragraph
+  structure: Remove Structure
 

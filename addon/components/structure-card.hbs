@@ -24,6 +24,17 @@
           {{t "move.structureDown"}}
         </AuButton>
       </AuList::Item>
+      <AuList::Item>
+        <AuButton
+          @icon="bin"
+          @iconAlignment="left"
+          @skin="link"
+          @alert={{true}}
+          @disabled={{this.isOutsideStructure}}
+          {{on 'click' this.removeStructure}}>
+          {{t "remove.structure"}}
+        </AuButton>
+      </AuList::Item>
     </c.content>
   </AuCard>
 {{/unless}}

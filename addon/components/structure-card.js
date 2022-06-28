@@ -25,6 +25,16 @@ export default class EditorPluginsParagraphCardComponent extends Component {
   }
 
   @action
+  removeStructure() {
+    this.args.controller.executeCommand(
+      'delete-node-from-uri',
+      this.args.controller,
+      this.structureUri,
+      'structure'
+    );
+  }
+
+  @action
   selectionChangedHandler() {
     const limitedDatastore = this.args.controller.datastore.limitToRange(
       this.args.controller.selection.lastRange,

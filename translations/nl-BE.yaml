@@ -6,3 +6,13 @@ move:
   articleDown: need translation
   paragraphUp: need translation
   paragraphDown: need translation
+  structureUp: need translation
+  structureDown: need translation
+title:
+  paragraphCard: need translation
+  articleCard: need translation
+  structureCard: need translation
+remove:
+  article: need translation
+  paragraph: need translation
+  structure: need translation

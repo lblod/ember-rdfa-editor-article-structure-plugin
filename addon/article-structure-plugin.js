@@ -1,3 +1,4 @@
+import DeleteNodeFromUriCommand from './commands/delete-node-from-uri-command';
 import InsertArticleCommand from './commands/insert-article-command';
 import InsertArticleStructureCommand from './commands/insert-article-structure-command';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
@@ -65,6 +66,9 @@ export default class ArticleStructurePlugin {
     );
     controller.registerCommand(
       new RecalculateStructureNumbersCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new DeleteNodeFromUriCommand(controller._rawEditor._model)
     );
     controller.registerWidget({
       componentName: 'article-structure-card',

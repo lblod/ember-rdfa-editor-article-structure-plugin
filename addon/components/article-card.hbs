@@ -24,6 +24,17 @@
           {{t "move.articleDown"}}
         </AuButton>
       </AuList::Item>
+      <AuList::Item>
+        <AuButton
+          @icon="bin"
+          @iconAlignment="left"
+          @skin="link"
+          @alert={{true}}
+          @disabled={{this.isOutsideArticle}}
+          {{on 'click' this.removeArticle}}>
+          {{t "remove.article"}}
+        </AuButton>
+      </AuList::Item>
     </c.content>
   </AuCard>
 {{/unless}}
