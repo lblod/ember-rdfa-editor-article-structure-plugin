@@ -96,10 +96,7 @@ export default class InsertArticleStructureCommand {
       const titleHtml = `
         <span property="dct:type" resource="${structureToAdd.type}"></span>
         <${structureToAdd.heading} property="say:heading">
-          <span property="eli:number" datatype="xsd:string"> 
-            I
-          </span>
-          :
+          <span property="eli:number" datatype="xsd:string">I</span>.
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
         </${structureToAdd.heading}>
       `;
@@ -158,7 +155,7 @@ export default class InsertArticleStructureCommand {
         <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
           <span property="dct:type" resource="${structureToAdd.type}"></span>
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string"> 
+            <span property="eli:number" datatype="xsd:string">
               ${this.generateStructureNumber(contentNode)}
             </span>
             :
@@ -181,7 +178,7 @@ export default class InsertArticleStructureCommand {
         <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
           <span property="dct:type" resource="${structureToAdd.type}"></span>
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string"> 
+            <span property="eli:number" datatype="xsd:string">
               ${this.generateStructureNumber(articleContainerNode)}
             </span>
             :

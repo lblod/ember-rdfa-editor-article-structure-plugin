@@ -26,7 +26,7 @@
       @skin="link"
       @disabled={{false}}
       {{on 'click' (fn this.insertStructure structure.title)}}>
-      Insert {{structure.title}}
+      {{t structure.translation}}
     </AuButton>
   </AuList::Item>
 {{/each}}

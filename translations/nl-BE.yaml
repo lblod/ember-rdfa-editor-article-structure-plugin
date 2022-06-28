@@ -1,18 +1,22 @@
 insert:
-  paragraph: need translation
-  article: need translation
+  paragraph: Paragraaf invoegen
+  article: Artikel invoegen
+  title: Titel invoegen
+  chapter: Hoodfstuk invoegen
+  heading: Afdeling invoegen
+  subsection: Onderafdeling invoegen
 move:
-  articleUp: need translation
-  articleDown: need translation
-  paragraphUp: need translation
-  paragraphDown: need translation
-  structureUp: need translation
-  structureDown: need translation
+  articleUp: Artikel naar boven verplaatsen
+  articleDown: Artikel naar beneden verplaatsen
+  paragraphUp: Paragraaf naar boven verplaatsen
+  paragraphDown: Paragraaf naar beneden verplaatsen
+  structureUp: Structuur naar boven verplaatsen
+  structureDown: Structuur naar beneden verplaatsen
 title:
-  paragraphCard: need translation
-  articleCard: need translation
-  structureCard: need translation
+  paragraphCard: Paragraaf card
+  articleCard: Artikel card
+  structureCard: Structuur card
 remove:
-  article: need translation
-  paragraph: need translation
-  structure: need translation
+  article: Artikel verwijderen
+  paragraph: Paragraaf verwijderen
+  structure: Structuur verwijderen

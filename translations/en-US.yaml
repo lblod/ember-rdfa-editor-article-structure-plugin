@@ -1,6 +1,10 @@
 insert:
   paragraph: Insert paragraph
   article: Insert article
+  title: Insert title
+  chapter: Insert chapter
+  heading: Insert section
+  subsection: Insert subsection
 move:
   articleUp: Move Article Up
   articleDown: Move Article Down
@@ -16,4 +20,3 @@ remove:
   article: Remove Article
   paragraph: Remove Paragraph
   structure: Remove Structure
-
