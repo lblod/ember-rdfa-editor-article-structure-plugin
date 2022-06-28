@@ -41,7 +41,7 @@ export default class ApplicationController extends Controller {
    
     <div property="prov:value" datatype="xsd:string">
       <div property="eli:has_part" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="besluit:Artikel">
-        <div>Artikel <span property="eli:number" datatype="xsd:string">1</span></div>
+        <div>Artikel <span property="eli:number" datatype="xsd:string">1</span>: <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span></div>
         <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
         <div property="prov:value" datatype="xsd:string">
           <span class="mark-highlight-manual">Voer inhoud in</span>

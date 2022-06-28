@@ -76,7 +76,10 @@ export default class InsertArticleCommand {
                 ? articleNumber
                 : this.generateArticleNumber(controller)
             }
-          </span></div>
+          </span>
+          :
+          <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
+        </div>
         <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
         <div property="prov:value" datatype="xsd:string">
         ${
