@@ -5,8 +5,57 @@ export default class MoveArticleCommand {
     this.model = model;
   }
 
-  canExecute() {
-    return true;
+  canExecute(controller, articleUri, moveUp) {
+    const articleSubjectNode = controller.datastore
+      .match(`>${articleUri}`, null, null)
+      .asSubjectNodes()
+      .next().value;
+    const articleNode = [...articleSubjectNode.nodes][0];
+    const articleContainer = articleNode.parent;
+    const articles = articleContainer.children.filter(
+      (child) => child.modelNodeType === 'ELEMENT'
+    );
+    const articleIndex = articles.findIndex(
+      (article) => article === articleNode
+    );
+    if (
+      ((articleIndex !== 0 && moveUp) ||
+        (articleIndex !== articles.length - 1 && !moveUp)) &&
+      articles.length > 1
+    ) {
+      return true;
+    } else {
+      // Find next structure up the chain with a container ready for articles
+      const treeWalker = new controller.treeWalkerFactory({
+        root: controller.modelRoot,
+        start: articleNode,
+        end: controller.modelRoot,
+        reverse: moveUp,
+        filter: (node) => {
+          const isStructure =
+            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          if (isStructure) {
+            const structureContent = node.children.filter(
+              (child) => child.getAttribute('property') === 'say:body'
+            )[0];
+            const substructures = structureContent.children.filter(
+              (child) =>
+                child.getAttribute('typeof') === 'say:DocumentSubdivision'
+            );
+            if (substructures.length === 0) {
+              return 0; // We accept the result
+            }
+          }
+          return 1; // We skip this node
+        },
+      });
+      const nodeToInsert = treeWalker.nextNode();
+      if (nodeToInsert) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   execute(controller, articleUri, moveUp) {

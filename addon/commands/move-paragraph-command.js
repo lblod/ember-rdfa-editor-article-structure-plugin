@@ -5,8 +5,48 @@ export default class MoveParagraphCommand {
     this.model = model;
   }
 
-  canExecute() {
-    return true;
+  canExecute(controller, paragraphUri, moveUp) {
+    const paragraphSubjectNode = controller.datastore
+      .match(`>${paragraphUri}`, null, null)
+      .asSubjectNodes()
+      .next().value;
+    const paragraphNode = [...paragraphSubjectNode.nodes][0];
+    const paragraphContainer = paragraphNode.parent;
+    const paragraphs = paragraphContainer.children.filter(
+      (child) => child.modelNodeType === 'ELEMENT'
+    );
+    const paragraphIndex = paragraphs.findIndex(
+      (paragraph) => paragraph === paragraphNode
+    );
+    if (
+      ((paragraphIndex !== 0 && moveUp) ||
+        (paragraphIndex !== paragraphs.length - 1 && !moveUp)) &&
+      paragraphs.length > 1
+    ) {
+      return true;
+    } else {
+      const articles = controller.datastore
+        .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+        .asPredicateNodes()
+        .next().value;
+      const articlesArray = [...articles.nodes];
+      let nodeToInsert;
+      for (let i = 0; i < articlesArray.length; i++) {
+        const article = articlesArray[i];
+        if (article === paragraphContainer.parent) {
+          if (moveUp) {
+            nodeToInsert = articlesArray[i - 1];
+          } else {
+            nodeToInsert = articlesArray[i + 1];
+          }
+        }
+      }
+      if (nodeToInsert) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   execute(controller, paragraphUri, moveUp) {

@@ -5,6 +5,8 @@ import { action } from '@ember/object';
 export default class EditorPluginsParagraphCardComponent extends Component {
   @tracked isOutsideStructure = true;
   @tracked structureUri = undefined;
+  @tracked canMoveUp = false;
+  @tracked canMoveDown = false;
 
   constructor() {
     super(...arguments);
@@ -51,12 +53,29 @@ export default class EditorPluginsParagraphCardComponent extends Component {
       documentMatches.nodes.length
     ) {
       const structure = documentMatches.nodes.pop();
-      if (!structure) {
-        this.isOutsideStructure = true;
-        this.structureUri = undefined;
-      } else {
+      const structureUri = structure.getAttribute('resource');
+      const headingMatch = limitedDatastore
+        .match(`>${structureUri}`, '>https://say.data.gift/ns/heading', null)
+        .asPredicateNodeMapping()
+        .single();
+      if (headingMatch && headingMatch.nodes && headingMatch.nodes.length) {
         this.isOutsideStructure = false;
         this.structureUri = structure.getAttribute('resource');
+        this.canMoveUp = this.args.controller.canExecuteCommand(
+          'move-structure',
+          this.args.controller,
+          this.structureUri,
+          true
+        );
+        this.canMoveDown = this.args.controller.canExecuteCommand(
+          'move-structure',
+          this.args.controller,
+          this.structureUri,
+          false
+        );
+      } else {
+        this.isOutsideStructure = true;
+        this.structureUri = undefined;
       }
     }
   }

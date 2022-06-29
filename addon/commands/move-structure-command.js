@@ -6,8 +6,64 @@ export default class MoveStructureCommand {
     this.model = model;
   }
 
-  canExecute() {
-    return true;
+  canExecute(controller, structureUri, moveUp) {
+    const structureSubjectNode = controller.datastore
+      .match(`>${structureUri}`, null, null)
+      .asSubjectNodes()
+      .next().value;
+    const structureNode = [...structureSubjectNode.nodes][0];
+    const structureContainer = structureNode.parent;
+    const structures = structureContainer.children.filter(
+      (child) => child.modelNodeType === 'ELEMENT'
+    );
+    const structureIndex = structures.findIndex(
+      (structure) => structure === structureNode
+    );
+    if (
+      ((structureIndex !== 0 && moveUp) ||
+        (structureIndex !== structures.length - 1 && !moveUp)) &&
+      structures.length > 1
+    ) {
+      return true;
+    } else {
+      const currentStructureType = controller.datastore
+        .match(`>${structureUri}`, '>http://purl.org/dc/terms/type', null)
+        .asQuads()
+        .next().value.object.value;
+      const currentStructureIndex = STRUCTURES.findIndex(
+        (structure) => structure.type === currentStructureType
+      );
+      const parentStructure = STRUCTURES[currentStructureIndex - 1];
+      if (!parentStructure) {
+        return false;
+      }
+      const treeWalker = new controller.treeWalkerFactory({
+        root: controller.modelRoot,
+        start: structureNode,
+        end: controller.modelRoot,
+        reverse: moveUp,
+        filter: (node) => {
+          const isStructure =
+            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          if (isStructure) {
+            const structureTypeNode = node.children.filter(
+              (child) => child.getAttribute('property') === 'dct:type'
+            )[0];
+            const structureType = structureTypeNode.getAttribute('resource');
+            if (structureType === parentStructure.type) {
+              return 0; // We accept the result
+            }
+          }
+          return 1; // We skip this node
+        },
+      });
+      const nodeToInsert = treeWalker.nextNode();
+      if (nodeToInsert) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   execute(controller, structureUri, moveUp) {
