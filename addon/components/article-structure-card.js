@@ -50,7 +50,7 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
       'rangeIsInside'
     );
     const article = limitedDatastore
-      .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+      .match(null, 'a', '>https://say.data.gift/ns/Article')
       .asQuads()
       .next().value;
     if (!article) {

@@ -26,7 +26,7 @@ export default class MoveParagraphCommand {
       return true;
     } else {
       const articles = controller.datastore
-        .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+        .match(null, 'a', '>https://say.data.gift/ns/Article')
         .asPredicateNodes()
         .next().value;
       const articlesArray = [...articles.nodes];
@@ -96,7 +96,7 @@ export default class MoveParagraphCommand {
       });
     } else {
       const articles = controller.datastore
-        .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+        .match(null, 'a', '>https://say.data.gift/ns/Article')
         .asPredicateNodes()
         .next().value;
       const articlesArray = [...articles.nodes];
@@ -113,7 +113,7 @@ export default class MoveParagraphCommand {
       }
       if (nodeToInsert) {
         const articleContent = nodeToInsert.children.filter(
-          (child) => child.getAttribute('property') === 'prov:value'
+          (child) => child.getAttribute('property') === 'say:body'
         )[0];
         let insertRange;
         if (
