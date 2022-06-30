@@ -5,6 +5,8 @@ import { action } from '@ember/object';
 export default class EditorPluginsParagraphCardComponent extends Component {
   @tracked isOutsideParagraph = true;
   @tracked paragrahUri = undefined;
+  @tracked canMoveUp = false;
+  @tracked canMoveDown = false;
 
   constructor() {
     super(...arguments);
@@ -45,13 +47,24 @@ export default class EditorPluginsParagraphCardComponent extends Component {
       .match(null, 'a', 'ext:Paragraph')
       .asQuads()
       .next().value;
-    console.log(paragraph);
     if (!paragraph) {
       this.isOutsideParagraph = true;
       this.paragrahUri = undefined;
     } else {
       this.isOutsideParagraph = false;
       this.paragrahUri = paragraph.subject.value;
+      this.canMoveUp = this.args.controller.canExecuteCommand(
+        'move-paragraph',
+        this.args.controller,
+        this.paragrahUri,
+        true
+      );
+      this.canMoveDown = this.args.controller.canExecuteCommand(
+        'move-paragraph',
+        this.args.controller,
+        this.paragrahUri,
+        false
+      );
     }
   }
 }

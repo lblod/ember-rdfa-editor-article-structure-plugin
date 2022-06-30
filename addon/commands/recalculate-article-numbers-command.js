@@ -11,7 +11,7 @@ export default class RecalculateArticleNumbersCommand {
 
   execute(controller) {
     const articles = controller.datastore
-      .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+      .match(null, 'a', '>https://say.data.gift/ns/Article')
       .asPredicateNodes()
       .next().value;
     if (!articles) return;

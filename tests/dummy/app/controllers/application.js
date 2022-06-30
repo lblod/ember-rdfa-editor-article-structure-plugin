@@ -40,10 +40,18 @@ export default class ApplicationController extends Controller {
     <h5>Beslissing</h5>
    
     <div property="prov:value" datatype="xsd:string">
-      <div property="eli:has_part" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="besluit:Artikel">
-        <div>Artikel <span property="eli:number" datatype="xsd:string">1</span>: <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span></div>
+      <div property="say:hasPart" resource="http://data.lblod.info/artikels/bbeb89ae-998b-4339-8de4-c8ab3a0679b5" typeof="say:Article">
+        <span property="dct:type" resource="sometype"></span>
+        <div property="say:heading">
+          Artikel 
+          <span property="eli:number" datatype="xsd:string"> 
+            1
+          </span>
+          :
+          <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
+        </div>
         <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
-        <div property="prov:value" datatype="xsd:string">
+        <div property="say:body" datatype='rdf:XMLLiteral'>
           <span class="mark-highlight-manual">Voer inhoud in</span>
         </div>
       </div>

@@ -5,6 +5,8 @@ import { action } from '@ember/object';
 export default class EditorPluginsParagraphCardComponent extends Component {
   @tracked isOutsideArticle = true;
   @tracked articleUri = undefined;
+  @tracked canMoveUp = false;
+  @tracked canMoveDown = false;
 
   constructor() {
     super(...arguments);
@@ -42,7 +44,7 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     );
 
     const article = limitedDatastore
-      .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Artikel')
+      .match(null, 'a', '>https://say.data.gift/ns/Article')
       .asQuads()
       .next().value;
     if (!article) {
@@ -51,6 +53,18 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     } else {
       this.isOutsideArticle = false;
       this.articleUri = article.subject.value;
+      this.canMoveUp = this.args.controller.canExecuteCommand(
+        'move-article',
+        this.args.controller,
+        this.articleUri,
+        true
+      );
+      this.canMoveDown = this.args.controller.canExecuteCommand(
+        'move-article',
+        this.args.controller,
+        this.articleUri,
+        false
+      );
     }
   }
 }

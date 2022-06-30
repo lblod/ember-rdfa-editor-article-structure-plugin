@@ -19,6 +19,17 @@ export default class DeleteNodeFromUriCommand {
     this.model.change((mutator) => {
       mutator.deleteNode(node);
     });
+    if (container.children.length === 0) {
+      controller.executeCommand(
+        'insert-html',
+        '<span class="mark-highlight-manual">Voer inhoud in</span>',
+        controller.rangeFactory.fromInNode(
+          container,
+          0,
+          container.getMaxOffset()
+        )
+      );
+    }
     controller.executeCommand(
       `recalculate-${type}-numbers`,
       controller,

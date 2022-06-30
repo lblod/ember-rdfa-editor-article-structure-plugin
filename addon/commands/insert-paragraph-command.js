@@ -13,10 +13,12 @@ export default class InsertParagraphCommand {
 
   execute(controller, articleUri) {
     const articleContentObjectNode = controller.datastore
-      .match(`>${articleUri}`, '>http://www.w3.org/ns/prov#value', null)
+      .match(`>${articleUri}`, '>https://say.data.gift/ns/body', null)
       .asObjectNodes()
       .next().value;
-    const articleContentElement = [...articleContentObjectNode.nodes][0];
+    const articleContentElement = [...articleContentObjectNode.nodes].find(
+      (node) => node.getAttribute('property') === 'say:body'
+    );
     const paragraphUri = `http://data.lblod.info/paragraph/${uuid()}`;
     if (
       articleContentElement.children.length > 1 ||

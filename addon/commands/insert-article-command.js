@@ -20,7 +20,9 @@ export default class InsertArticleCommand {
       visitParentUpwards: true,
       filter: (node) => {
         const isStructureBody = node.getAttribute('property') === 'say:body';
-        if (isStructureBody) {
+        const isStructure =
+          node.parent.getAttribute('typeof') === 'say:DocumentSubdivision';
+        if (isStructureBody && isStructure) {
           const substructures = node.children.filter(
             (child) =>
               child.getAttribute('typeof') === 'say:DocumentSubdivision'
@@ -32,7 +34,7 @@ export default class InsertArticleCommand {
           const isArticleContainer =
             node.getAttribute('property') === 'prov:value' &&
             (!node.parent ||
-              node.parent.getAttribute('typeof') !== 'besluit:Artikel');
+              node.parent.getAttribute('typeof') !== 'say:Article');
           if (isArticleContainer) {
             const substructures = node.children.filter(
               (child) =>
@@ -67,8 +69,9 @@ export default class InsertArticleCommand {
     }
     const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
     const articleHtml = `
-      <div property="eli:has_part" prefix="mobiliteit: https://data.vlaanderen.be/ns/mobiliteit#" typeof="besluit:Artikel" resource="${articleUri}">
-        <div>
+      <div property="say:hasPart" typeof="say:Article" resource="${articleUri}">
+        <span property="dct:type" resource="sometype"></span>
+        <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 
             <span class="mark-highlight-manual">Voer inhoud in</span>
@@ -77,7 +80,7 @@ export default class InsertArticleCommand {
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
         </div>
         <span style="display:none;" property="eli:language" resource="http://publications.europa.eu/resource/authority/language/NLD" typeof="skos:Concept">&nbsp;</span>
-        <div property="prov:value" datatype="xsd:string">
+        <div property="say:body" datatype='rdf:XMLLiteral'>
         ${
           articleContent
             ? articleContent

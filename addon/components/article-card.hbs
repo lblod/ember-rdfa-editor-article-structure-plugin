@@ -10,7 +10,7 @@
             @icon="add"
             @iconAlignment="left"
             @skin="link"
-            @disabled={{this.isOutsideArticle}}
+            @disabled={{(not this.canMoveUp)}}
             {{on 'click' (fn this.moveArticle true)}}>
             {{t "move.articleUp"}}
           </AuButton>
@@ -20,7 +20,7 @@
             @icon="add"
             @iconAlignment="left"
             @skin="link"
-            @disabled={{this.isOutsideArticle}}
+            @disabled={{(not this.canMoveDown)}}
             {{on 'click' (fn this.moveArticle false)}}>
             {{t "move.articleDown"}}
           </AuButton>
