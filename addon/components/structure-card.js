@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { structureTypes } from '../utils/constants';
 
 export default class EditorPluginsParagraphCardComponent extends Component {
   @tracked isOutsideStructure = true;
@@ -44,7 +45,12 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     );
 
     const documentMatches = limitedDatastore
-      .match(null, 'a', '>https://say.data.gift/ns/DocumentSubdivision')
+      .match(null, 'a', null)
+      .transformDataset((dataset) => {
+        return dataset.filter((quad) => {
+          return structureTypes.includes(quad.object.value);
+        });
+      })
       .asPredicateNodeMapping()
       .single();
     if (

@@ -28,3 +28,5 @@ export const STRUCTURES = [
     translation: 'insert.subsection',
   },
 ];
+
+export const structureTypes = STRUCTURES.map((structure) => structure.type);
