@@ -1,4 +1,5 @@
 import romanize from '../utils/romanize';
+import { structureTypes } from '../utils/constants';
 
 export default class RecalculateStructureNumbersCommand {
   name = 'recalculate-structure-numbers';
@@ -11,13 +12,18 @@ export default class RecalculateStructureNumbersCommand {
     return true;
   }
 
-  execute(controller, container) {
+  execute(controller, container, type) {
     const structures = controller.datastore
       .limitToRange(
         controller.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
-      .match(null, 'a', '>https://say.data.gift/ns/DocumentSubdivision')
+      .match(null, 'a', `>${type}`)
+      .transformDataset((dataset) => {
+        return dataset.filter((quad) => {
+          return structureTypes.includes(quad.object.value);
+        });
+      })
       .asPredicateNodes()
       .next().value;
     if (!structures) return;

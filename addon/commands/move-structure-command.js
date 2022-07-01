@@ -78,6 +78,10 @@ export default class MoveStructureCommand {
     const structureIndex = structures.findIndex(
       (structure) => structure === structureNode
     );
+    const currentStructureType = controller.datastore
+        .match(`>${structureUri}`, 'a', null)
+        .asQuads()
+        .next().value.object.value;
     if (
       ((structureIndex !== 0 && moveUp) ||
         (structureIndex !== structures.length - 1 && !moveUp)) &&
@@ -100,7 +104,8 @@ export default class MoveStructureCommand {
       controller.executeCommand(
         'recalculate-structure-numbers',
         controller,
-        structureContainer
+        structureContainer,
+        currentStructureType
       );
       this.model.change(() => {
         const heading = structureAToInsert.children.find(
@@ -111,10 +116,6 @@ export default class MoveStructureCommand {
       });
     } else {
       // Find next parent structure up the chain
-      const currentStructureType = controller.datastore
-        .match(`>${structureUri}`, 'a', null)
-        .asQuads()
-        .next().value.object.value;
       const currentStructureIndex = STRUCTURES.findIndex(
         (structure) => structure.type === currentStructureType
       );
@@ -181,12 +182,14 @@ export default class MoveStructureCommand {
         controller.executeCommand(
           'recalculate-structure-numbers',
           controller,
-          structureContainer
+          structureContainer,
+          currentStructureType
         );
         controller.executeCommand(
           'recalculate-structure-numbers',
           controller,
-          structureContent
+          structureContent,
+          currentStructureType
         );
         this.model.change(() => {
           const heading = insertStructure.children.find(
