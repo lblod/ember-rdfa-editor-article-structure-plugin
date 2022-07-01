@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { STRUCTURES, structureTypes } from '../utils/constants';
 import searchForType from '../utils/searchForType';
+import searchForSuperStructure from '../utils/searchForSuperStructure';
 import romanize from '../utils/romanize';
 
 export default class InsertArticleStructureCommand {
@@ -43,17 +44,13 @@ export default class InsertArticleStructureCommand {
     }
     if (!structureOfSameType) {
       // Needs to wrap everything
-      const parentStructure = STRUCTURES[structureToAddIndex - 1];
-      const parentStructureType = parentStructure
-        ? parentStructure.type
-        : undefined;
-      const parentStructureObjectNode = searchForType(
+      const parentStructureObjectNode = searchForSuperStructure(
         controller.datastore,
         limitedDatastore,
-        parentStructureType
+        structureToAddIndex
       );
       let containerNode;
-      if (parentStructure && parentStructureObjectNode) {
+      if (parentStructureObjectNode) {
         //In the parent structure
         const parentNode = [...parentStructureObjectNode.nodes][0];
         for (let child of parentNode.children) {

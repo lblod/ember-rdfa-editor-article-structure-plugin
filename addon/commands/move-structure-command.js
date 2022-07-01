@@ -79,9 +79,9 @@ export default class MoveStructureCommand {
       (structure) => structure === structureNode
     );
     const currentStructureType = controller.datastore
-        .match(`>${structureUri}`, 'a', null)
-        .asQuads()
-        .next().value.object.value;
+      .match(`>${structureUri}`, 'a', null)
+      .asQuads()
+      .next().value.object.value;
     if (
       ((structureIndex !== 0 && moveUp) ||
         (structureIndex !== structures.length - 1 && !moveUp)) &&
