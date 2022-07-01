@@ -104,11 +104,10 @@ export default class MoveStructureCommand {
         structureContainer
       );
       this.model.change(() => {
-        const range = controller.rangeFactory.fromInElement(
-          structureAToInsert,
-          0,
-          0
+        const heading = structureAToInsert.children.find(
+          (child) => child.getAttribute('property') === 'say:heading'
         );
+        const range = controller.rangeFactory.fromInElement(heading, 0, 0);
         controller.selection.selectRange(range);
       });
     } else {
@@ -193,11 +192,10 @@ export default class MoveStructureCommand {
           structureContent
         );
         this.model.change(() => {
-          const range = controller.rangeFactory.fromInElement(
-            insertStructure,
-            0,
-            0
+          const heading = insertStructure.children.find(
+            (child) => child.getAttribute('property') === 'say:heading'
           );
+          const range = controller.rangeFactory.fromInElement(heading, 0, 0);
           controller.selection.selectRange(range);
         });
       }
