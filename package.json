@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "@appuniversum/ember-appuniversum": "^1.2.1",
-    "@lblod/ember-rdfa-editor": ">=0.55.0",
+    "@lblod/ember-rdfa-editor": "^0.60.0",
     "ember-concurrency": "^2.2.0",
     "ember-power-select": "^5.0.4"
   },
@@ -48,7 +48,7 @@
     "@ember/test-helpers": "^2.6.0",
     "@glimmer/component": "^1.0.3",
     "@glimmer/tracking": "^1.0.3",
-    "@lblod/ember-rdfa-editor": ">=0.57.0",
+    "@lblod/ember-rdfa-editor": "^0.60.0",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~3.28.5",
