@@ -107,6 +107,7 @@ export default class MoveStructureCommand {
         structureContainer,
         currentStructureType
       );
+      controller.executeCommand('recalculate-article-numbers', controller);
       this.model.change(() => {
         const heading = structureAToInsert.children.find(
           (child) => child.getAttribute('property') === 'say:heading'
@@ -191,6 +192,7 @@ export default class MoveStructureCommand {
           structureContent,
           currentStructureType
         );
+        controller.executeCommand('recalculate-article-numbers', controller);
         this.model.change(() => {
           const heading = insertStructure.children.find(
             (child) => child.getAttribute('property') === 'say:heading'
