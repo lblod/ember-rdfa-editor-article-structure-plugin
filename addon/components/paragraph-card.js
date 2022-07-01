@@ -44,7 +44,7 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     );
 
     const paragraph = limitedDatastore
-      .match(null, 'a', 'ext:Paragraph')
+      .match(null, 'a', '>https://say.data.gift/ns/Paragraph')
       .asQuads()
       .next().value;
     if (!paragraph) {

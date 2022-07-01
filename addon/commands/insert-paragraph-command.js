@@ -23,10 +23,10 @@ export default class InsertParagraphCommand {
     if (
       articleContentElement.children.length > 1 ||
       articleContentElement.children[0].attributeMap.get('typeof') ===
-        'ext:Paragraph'
+        'say:Paragraph'
     ) {
       const paragraphHtml = `
-        <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
+        <div property="say:hasParagraph" typeof="say:Paragraph" resource="${paragraphUri}">
           §<span property="eli:number" datatype="xsd:string">${this.generateParagraphNumber(
             articleContentElement
           )}</span>.
@@ -44,7 +44,7 @@ export default class InsertParagraphCommand {
       );
     } else {
       const paragraphHtml = `
-        <div property="ext:hasParagraph" typeof="ext:Paragraph" resource="${paragraphUri}">
+        <div property="say:hasParagraph" typeof="say:Paragraph" resource="${paragraphUri}">
           §<span property="eli:number" datatype="xsd:string">1</span>. 
         </div>
       `;
@@ -92,7 +92,7 @@ export default class InsertParagraphCommand {
   }
   generateParagraphNumber(container) {
     const substructures = container.children.filter(
-      (node) => node.getAttribute('typeof') === 'ext:Paragraph'
+      (node) => node.getAttribute('typeof') === 'say:Paragraph'
     );
     return substructures.length + 1;
   }

@@ -15,7 +15,7 @@ export default class RecalculateParagraphNumbersCommand {
         controller.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
-      .match(null, 'a', 'ext:Paragraph')
+      .match(null, 'a', '>https://say.data.gift/ns/Paragraph')
       .asPredicateNodes()
       .next().value;
     if (!paragraphs) return;
