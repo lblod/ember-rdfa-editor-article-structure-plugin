@@ -79,6 +79,10 @@ export default class MoveStructureCommand {
     const structureIndex = structures.findIndex(
       (structure) => structure === structureNode
     );
+    const currentStructureType = controller.datastore
+        .match(`>${structureUri}`, '>http://purl.org/dc/terms/type', null)
+        .asQuads()
+        .next().value.object.value;
     if (
       ((structureIndex !== 0 && moveUp) ||
         (structureIndex !== structures.length - 1 && !moveUp)) &&
@@ -101,22 +105,18 @@ export default class MoveStructureCommand {
       controller.executeCommand(
         'recalculate-structure-numbers',
         controller,
-        structureContainer
+        structureContainer,
+        currentStructureType
       );
       this.model.change(() => {
-        const range = controller.rangeFactory.fromInElement(
-          structureAToInsert,
-          0,
-          0
+        const heading = structureAToInsert.children.find(
+          (child) => child.getAttribute('property') === 'say:heading'
         );
+        const range = controller.rangeFactory.fromInElement(heading, 0, 0);
         controller.selection.selectRange(range);
       });
     } else {
       // Find next parent structure up the chain
-      const currentStructureType = controller.datastore
-        .match(`>${structureUri}`, '>http://purl.org/dc/terms/type', null)
-        .asQuads()
-        .next().value.object.value;
       const currentStructureIndex = STRUCTURES.findIndex(
         (structure) => structure.type === currentStructureType
       );
@@ -185,19 +185,20 @@ export default class MoveStructureCommand {
         controller.executeCommand(
           'recalculate-structure-numbers',
           controller,
-          structureContainer
+          structureContainer,
+          currentStructureType
         );
         controller.executeCommand(
           'recalculate-structure-numbers',
           controller,
-          structureContent
+          structureContent,
+          currentStructureType
         );
         this.model.change(() => {
-          const range = controller.rangeFactory.fromInElement(
-            insertStructure,
-            0,
-            0
+          const heading = insertStructure.children.find(
+            (child) => child.getAttribute('property') === 'say:heading'
           );
+          const range = controller.rangeFactory.fromInElement(heading, 0, 0);
           controller.selection.selectRange(range);
         });
       }

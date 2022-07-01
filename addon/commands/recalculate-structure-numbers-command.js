@@ -11,14 +11,14 @@ export default class RecalculateStructureNumbersCommand {
     return true;
   }
 
-  execute(controller, container) {
+  execute(controller, container, type) {
     const structures = controller.datastore
       .limitToRange(
         controller.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
-      .match(null, 'a', '>https://say.data.gift/ns/DocumentSubdivision')
-      .asPredicateNodes()
+      .match(null, '>http://purl.org/dc/terms/type', `>${type}`)
+      .asSubjectNodes()
       .next().value;
     if (!structures) return;
     const structuresArray = [...structures.nodes];
