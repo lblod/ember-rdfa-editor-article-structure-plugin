@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
-import { STRUCTURES } from '../utils/constants';
+import { STRUCTURES, structureTypes } from '../utils/constants';
 import searchForType from '../utils/searchForType';
+import searchForSuperStructure from '../utils/searchForSuperStructure';
 import romanize from '../utils/romanize';
 
 export default class InsertArticleStructureCommand {
@@ -43,17 +44,13 @@ export default class InsertArticleStructureCommand {
     }
     if (!structureOfSameType) {
       // Needs to wrap everything
-      const parentStructure = STRUCTURES[structureToAddIndex - 1];
-      const parentStructureType = parentStructure
-        ? parentStructure.type
-        : undefined;
-      const parentStructureObjectNode = searchForType(
+      const parentStructureObjectNode = searchForSuperStructure(
         controller.datastore,
         limitedDatastore,
-        parentStructureType
+        structureToAddIndex
       );
       let containerNode;
-      if (parentStructure && parentStructureObjectNode) {
+      if (parentStructureObjectNode) {
         //In the parent structure
         const parentNode = [...parentStructureObjectNode.nodes][0];
         for (let child of parentNode.children) {
@@ -84,7 +81,7 @@ export default class InsertArticleStructureCommand {
         containerNode.getMaxOffset()
       );
       structureNode.setAttribute('property', 'say:hasPart');
-      structureNode.setAttribute('typeof', 'say:DocumentSubdivision');
+      structureNode.setAttribute('typeof', structureToAdd.type);
       structureNode.setAttribute('resource', structureUri);
       const structureContent = controller.createModelElement('div');
       structureContent.setAttribute('property', 'say:body');
@@ -94,7 +91,6 @@ export default class InsertArticleStructureCommand {
       });
       //TODO: make this with model elements if possible
       const titleHtml = `
-        <span property="dct:type" resource="${structureToAdd.type}"></span>
         <${structureToAdd.heading} property="say:heading">
           <span property="eli:number" datatype="xsd:string">I</span>.
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
@@ -152,10 +148,15 @@ export default class InsertArticleStructureCommand {
           contentNode.getMaxOffset()
         );
         const structureHtml = `
-        <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
-          <span property="dct:type" resource="${structureToAdd.type}"></span>
+        <div 
+          property="say:hasPart" 
+          typeof="${structureToAdd.type}" 
+          resource="${structureUri}"
+        >
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(contentNode)}</span>.
+            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
+              contentNode
+            )}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
@@ -172,10 +173,15 @@ export default class InsertArticleStructureCommand {
           articleContainerNode.getMaxOffset()
         );
         const structureHtml = `
-        <div property="say:hasPart" typeof="say:DocumentSubdivision" resource="${structureUri}">
-          <span property="dct:type" resource="${structureToAdd.type}"></span>
+        <div 
+          property="say:hasPart" 
+          typeof="${structureToAdd.type}" 
+          resource="${structureUri}"
+        >
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(articleContainerNode)}</span>.
+            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
+              articleContainerNode
+            )}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
@@ -200,8 +206,8 @@ export default class InsertArticleStructureCommand {
     });
   }
   generateStructureNumber(container) {
-    const substructures = container.children.filter(
-      (node) => node.getAttribute('typeof') === 'say:DocumentSubdivision'
+    const substructures = container.children.filter((node) =>
+      structureTypes.includes(node.getAttribute('typeof'))
     );
     return romanize(substructures.length + 1);
   }

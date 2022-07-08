@@ -1,3 +1,5 @@
+import { structureTypes } from '../utils/constants';
+
 export default class MoveArticleCommand {
   name = 'move-article';
 
@@ -32,15 +34,15 @@ export default class MoveArticleCommand {
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure =
-            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          const isStructure = structureTypes.includes(
+            node.getAttribute('typeof')
+          );
           if (isStructure) {
             const structureContent = node.children.filter(
               (child) => child.getAttribute('property') === 'say:body'
             )[0];
-            const substructures = structureContent.children.filter(
-              (child) =>
-                child.getAttribute('typeof') === 'say:DocumentSubdivision'
+            const substructures = structureContent.children.filter((child) =>
+              structureTypes.includes(child.getAttribute('typeof'))
             );
             if (substructures.length === 0) {
               return 0; // We accept the result
@@ -105,15 +107,15 @@ export default class MoveArticleCommand {
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure =
-            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          const isStructure = structureTypes.includes(
+            node.getAttribute('typeof')
+          );
           if (isStructure) {
             const structureContent = node.children.filter(
               (child) => child.getAttribute('property') === 'say:body'
             )[0];
-            const substructures = structureContent.children.filter(
-              (child) =>
-                child.getAttribute('typeof') === 'say:DocumentSubdivision'
+            const substructures = structureContent.children.filter((child) =>
+              structureTypes.includes(child.getAttribute('typeof'))
             );
             if (substructures.length === 0) {
               return 0; // We accept the result

@@ -1,4 +1,5 @@
 import romanize from '../utils/romanize';
+import { structureTypes } from '../utils/constants';
 
 export default class RecalculateStructureNumbersCommand {
   name = 'recalculate-structure-numbers';
@@ -17,8 +18,13 @@ export default class RecalculateStructureNumbersCommand {
         controller.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
-      .match(null, '>http://purl.org/dc/terms/type', `>${type}`)
-      .asSubjectNodes()
+      .match(null, 'a', `>${type}`)
+      .transformDataset((dataset) => {
+        return dataset.filter((quad) => {
+          return structureTypes.includes(quad.object.value);
+        });
+      })
+      .asPredicateNodes()
       .next().value;
     if (!structures) return;
     const structuresArray = [...structures.nodes];

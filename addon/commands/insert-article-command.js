@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { structureTypes } from '../utils/constants';
 
 export default class InsertArticleCommand {
   name = 'insert-article';
@@ -20,12 +21,12 @@ export default class InsertArticleCommand {
       visitParentUpwards: true,
       filter: (node) => {
         const isStructureBody = node.getAttribute('property') === 'say:body';
-        const isStructure =
-          node.parent.getAttribute('typeof') === 'say:DocumentSubdivision';
+        const isStructure = structureTypes.includes(
+          node.parent.getAttribute('typeof')
+        );
         if (isStructureBody && isStructure) {
-          const substructures = node.children.filter(
-            (child) =>
-              child.getAttribute('typeof') === 'say:DocumentSubdivision'
+          const substructures = node.children.filter((child) =>
+            structureTypes.includes(child.getAttribute('typeof'))
           );
           if (substructures.length === 0) {
             return 0; // We accept the result
@@ -36,9 +37,8 @@ export default class InsertArticleCommand {
             (!node.parent ||
               node.parent.getAttribute('typeof') !== 'say:Article');
           if (isArticleContainer) {
-            const substructures = node.children.filter(
-              (child) =>
-                child.getAttribute('typeof') === 'say:DocumentSubdivision'
+            const substructures = node.children.filter((child) =>
+              structureTypes.includes(child.getAttribute('typeof'))
             );
             if (!substructures.length) {
               return 0; // We accept the result
@@ -70,7 +70,6 @@ export default class InsertArticleCommand {
     const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
     const articleHtml = `
       <div property="say:hasPart" typeof="say:Article" resource="${articleUri}">
-        <span property="dct:type" resource="sometype"></span>
         <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 

@@ -1,4 +1,5 @@
-import { STRUCTURES } from '../utils/constants';
+import { STRUCTURES, structureTypes } from '../utils/constants';
+
 export default class MoveStructureCommand {
   name = 'move-structure';
 
@@ -27,7 +28,7 @@ export default class MoveStructureCommand {
       return true;
     } else {
       const currentStructureType = controller.datastore
-        .match(`>${structureUri}`, '>http://purl.org/dc/terms/type', null)
+        .match(`>${structureUri}`, 'a', null)
         .asQuads()
         .next().value.object.value;
       const currentStructureIndex = STRUCTURES.findIndex(
@@ -43,13 +44,11 @@ export default class MoveStructureCommand {
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure =
-            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          const isStructure = structureTypes.includes(
+            node.getAttribute('typeof')
+          );
           if (isStructure) {
-            const structureTypeNode = node.children.filter(
-              (child) => child.getAttribute('property') === 'dct:type'
-            )[0];
-            const structureType = structureTypeNode.getAttribute('resource');
+            const structureType = node.getAttribute('typeof');
             if (structureType === parentStructure.type) {
               return 0; // We accept the result
             }
@@ -80,9 +79,9 @@ export default class MoveStructureCommand {
       (structure) => structure === structureNode
     );
     const currentStructureType = controller.datastore
-        .match(`>${structureUri}`, '>http://purl.org/dc/terms/type', null)
-        .asQuads()
-        .next().value.object.value;
+      .match(`>${structureUri}`, 'a', null)
+      .asQuads()
+      .next().value.object.value;
     if (
       ((structureIndex !== 0 && moveUp) ||
         (structureIndex !== structures.length - 1 && !moveUp)) &&
@@ -108,6 +107,7 @@ export default class MoveStructureCommand {
         structureContainer,
         currentStructureType
       );
+      controller.executeCommand('recalculate-article-numbers', controller);
       this.model.change(() => {
         const heading = structureAToInsert.children.find(
           (child) => child.getAttribute('property') === 'say:heading'
@@ -127,13 +127,11 @@ export default class MoveStructureCommand {
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure =
-            node.getAttribute('typeof') === 'say:DocumentSubdivision';
+          const isStructure = structureTypes.includes(
+            node.getAttribute('typeof')
+          );
           if (isStructure) {
-            const structureTypeNode = node.children.filter(
-              (child) => child.getAttribute('property') === 'dct:type'
-            )[0];
-            const structureType = structureTypeNode.getAttribute('resource');
+            const structureType = node.getAttribute('typeof');
             if (structureType === parentStructure.type) {
               return 0; // We accept the result
             }
@@ -194,6 +192,7 @@ export default class MoveStructureCommand {
           structureContent,
           currentStructureType
         );
+        controller.executeCommand('recalculate-article-numbers', controller);
         this.model.change(() => {
           const heading = insertStructure.children.find(
             (child) => child.getAttribute('property') === 'say:heading'
