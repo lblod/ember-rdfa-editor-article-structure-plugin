@@ -154,10 +154,7 @@ export default class InsertArticleStructureCommand {
           resource="${structureUri}"
         >
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string">
-              ${this.generateStructureNumber(contentNode)}
-            </span>
-            :
+            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(contentNode)}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
@@ -180,10 +177,7 @@ export default class InsertArticleStructureCommand {
           resource="${structureUri}"
         >
           <${structureToAdd.heading} property="say:heading">
-            <span property="eli:number" datatype="xsd:string">
-              ${this.generateStructureNumber(articleContainerNode)}
-            </span>
-            :
+            <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(articleContainerNode)}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
