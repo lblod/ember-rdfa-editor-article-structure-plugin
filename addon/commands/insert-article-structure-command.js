@@ -30,17 +30,22 @@ export default class InsertArticleStructureCommand {
       limitedDatastore,
       structureToAdd.type
     );
-    const besluit = limitedDatastore
-      .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
+    const documentContent = limitedDatastore
+      .match(null, 'a', '>https://say.data.gift/ns/DocumentContent')
       .asSubjectNodes()
       .next().value;
-    const besluitNode = [...besluit.nodes][0];
-    let articleContainerNode;
-    for (let child of besluitNode.children) {
-      if (child.attributeMap.get('property') === 'prov:value') {
-        articleContainerNode = child;
-        break;
-      }
+    let documentContentNode;
+    if (!documentContent) {
+      documentContentNode = controller.createModelElement('div');
+      documentContentNode.setAttribute('typeof', 'say:DocumentContent');
+      this.model.change((mutator) => {
+        mutator.insertNodes(
+          controller.selection.lastRange,
+          documentContentNode
+        );
+      });
+    } else {
+      documentContentNode = [...documentContent.nodes][0];
     }
     if (!structureOfSameType) {
       // Needs to wrap everything
@@ -61,17 +66,7 @@ export default class InsertArticleStructureCommand {
         }
       } else {
         //In the article container
-        const besluit = limitedDatastore
-          .match(null, 'a', '>http://data.vlaanderen.be/ns/besluit#Besluit')
-          .asSubjectNodes()
-          .next().value;
-        const besluitNode = [...besluit.nodes][0];
-        for (let child of besluitNode.children) {
-          if (child.attributeMap.get('property') === 'prov:value') {
-            containerNode = child;
-            break;
-          }
-        }
+        containerNode = documentContentNode;
       }
       const children = [...containerNode.children];
       const structureNode = controller.createModelElement('div');
@@ -168,9 +163,9 @@ export default class InsertArticleStructureCommand {
       } else {
         //Added to the article container
         const rangeToInsert = controller.rangeFactory.fromInNode(
-          articleContainerNode,
-          articleContainerNode.getMaxOffset(),
-          articleContainerNode.getMaxOffset()
+          documentContentNode,
+          documentContentNode.getMaxOffset(),
+          documentContentNode.getMaxOffset()
         );
         const structureHtml = `
         <div 
