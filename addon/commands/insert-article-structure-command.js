@@ -113,9 +113,17 @@ export default class InsertArticleStructureCommand {
         0,
         structureContent.getMaxOffset()
       );
-      this.model.change((mutator) => {
-        mutator.insertNodes(rangeToInsertChildrens, ...children);
-      });
+      if (children.length) {
+        this.model.change((mutator) => {
+          mutator.insertNodes(rangeToInsertChildrens, ...children);
+        });
+      } else {
+        controller.executeCommand(
+          'insert-html',
+          '<span class="mark-highlight-manual">Voer inhoud in</span>',
+          rangeToInsertChildrens
+        );
+      }
     } else {
       // Needs to be added at the end
       const parentStructure = STRUCTURES[structureToAddIndex - 1];
@@ -175,7 +183,7 @@ export default class InsertArticleStructureCommand {
         >
           <${structureToAdd.heading} property="say:heading">
             <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
-              articleContainerNode
+              documentContentNode
             )}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
           </${structureToAdd.heading}>
