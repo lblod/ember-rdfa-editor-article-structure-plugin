@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { structureTypes } from '../utils/constants';
 
-export default class EditorPluginsParagraphCardComponent extends Component {
+export default class EditorPluginsStructureCardComponent extends Component {
   @tracked isOutsideStructure = true;
   @tracked structureUri = undefined;
   @tracked canMoveUp = false;
