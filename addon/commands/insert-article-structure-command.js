@@ -15,7 +15,8 @@ export default class InsertArticleStructureCommand {
     return true;
   }
 
-  execute(controller, structureName) {
+  execute(controller, structureName, plugin) {
+    console.log(plugin)
     const structureToAddIndex = STRUCTURES.findIndex(
       (structure) => structure.title === structureName
     );

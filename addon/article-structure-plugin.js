@@ -38,7 +38,9 @@ export default class ArticleStructurePlugin {
     return 'article-structure';
   }
 
-  initialize(controller) {
+  initialize(controller, options) {
+    console.log('init')
+    console.log(options)
     this.controller = controller;
     controller.registerCommand(
       new InsertArticleCommand(controller._rawEditor._model)
@@ -90,5 +92,7 @@ export default class ArticleStructurePlugin {
       identifier: 'article-structure-plugin/structure-card',
       desiredLocation: 'sidebar',
     });
+    console.log(options);
+    this.options = options;
   }
 }
