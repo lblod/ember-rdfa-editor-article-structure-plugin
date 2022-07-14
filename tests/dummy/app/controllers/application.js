@@ -6,13 +6,18 @@ export default class ApplicationController extends Controller {
     {
       name: 'article-structure',
       options: {
-        rdfaContainer: 'abcs',
+        rdfaContainer: 'http://test/myTestContainer',
       },
     },
   ];
 
   @action
   rdfaEditorInit(controller) {
+    const presetContent = `
+      <div prefix="dct: http://purl.org/dc/terms/ ext: http://mu.semte.ch/vocabularies/ext/ say: https://say.data.gift/ns/">
+        Insert here
+      </div>`;
+    controller.setHtmlContent(presetContent);
     const editorDone = new CustomEvent('editor-done');
     window.dispatchEvent(editorDone);
   }

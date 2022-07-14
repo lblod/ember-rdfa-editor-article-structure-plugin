@@ -15,8 +15,10 @@ export default class InsertArticleStructureCommand {
     return true;
   }
 
-  execute(controller, structureName, plugin) {
-    console.log(plugin)
+  execute(controller, structureName, options) {
+    const rdfaContainer = options.rdfaContainer
+      ? options.rdfaContainer
+      : 'https://say.data.gift/ns/DocumentContent';
     const structureToAddIndex = STRUCTURES.findIndex(
       (structure) => structure.title === structureName
     );
@@ -32,13 +34,13 @@ export default class InsertArticleStructureCommand {
       structureToAdd.type
     );
     const documentContent = limitedDatastore
-      .match(null, 'a', '>https://say.data.gift/ns/DocumentContent')
+      .match(null, 'a', `>${rdfaContainer}`)
       .asSubjectNodes()
       .next().value;
     let documentContentNode;
     if (!documentContent) {
       documentContentNode = controller.createModelElement('div');
-      documentContentNode.setAttribute('typeof', 'say:DocumentContent');
+      documentContentNode.setAttribute('typeof', rdfaContainer);
       this.model.change((mutator) => {
         mutator.insertNodes(
           controller.selection.lastRange,

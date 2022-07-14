@@ -39,8 +39,6 @@ export default class ArticleStructurePlugin {
   }
 
   initialize(controller, options) {
-    console.log('init')
-    console.log(options)
     this.controller = controller;
     controller.registerCommand(
       new InsertArticleCommand(controller._rawEditor._model)
@@ -76,6 +74,9 @@ export default class ArticleStructurePlugin {
       componentName: 'article-structure-card',
       identifier: 'article-structure-plugin/card',
       desiredLocation: 'insertSidebar',
+      widgetArgs: {
+        options: options,
+      },
     });
     controller.registerWidget({
       componentName: 'paragraph-card',
@@ -92,7 +93,6 @@ export default class ArticleStructurePlugin {
       identifier: 'article-structure-plugin/structure-card',
       desiredLocation: 'sidebar',
     });
-    console.log(options);
     this.options = options;
   }
 }
