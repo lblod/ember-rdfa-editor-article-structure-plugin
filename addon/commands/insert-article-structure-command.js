@@ -16,9 +16,10 @@ export default class InsertArticleStructureCommand {
   }
 
   execute(controller, structureName, options) {
-    const rdfaContainer = options.rdfaContainer
-      ? options.rdfaContainer
-      : 'https://say.data.gift/ns/DocumentContent';
+    const rdfaContainer =
+      options && options.rdfaContainer
+        ? options.rdfaContainer
+        : 'https://say.data.gift/ns/DocumentContent';
     const structureToAddIndex = STRUCTURES.findIndex(
       (structure) => structure.title === structureName
     );
