@@ -3,6 +3,15 @@
 
 
 
+
+## 0.2.5 (2022-07-15)
+
+#### :rocket: Enhancement
+* [#4](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/4) Feature/rdfa customization ([@lagartoverde](https://github.com/lagartoverde))
+
+#### Committers: 1
+- Oscar Rodriguez Villalobos ([@lagartoverde](https://github.com/lagartoverde))
+
 ## 0.2.4 (2022-07-12)
 
 #### :rocket: Enhancement
