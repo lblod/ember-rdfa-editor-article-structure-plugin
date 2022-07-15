@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import { STRUCTURES } from '../utils/constants';
 import searchForType from '../utils/searchForType';
 
-export default class EditorPluginsTemplateVariableCardComponent extends Component {
+export default class EditorPluginsArticleStructureCardComponent extends Component {
   @tracked isOutsideArticle = true;
   @tracked articleUri = undefined;
   @tracked isOutsideStructure = true;
@@ -39,7 +39,8 @@ export default class EditorPluginsTemplateVariableCardComponent extends Componen
     this.args.controller.executeCommand(
       'insert-article-structure',
       this.args.controller,
-      structureName
+      structureName,
+      this.args.widgetArgs.options
     );
   }
 
