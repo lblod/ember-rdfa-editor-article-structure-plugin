@@ -24,7 +24,10 @@ export default class InsertArticleStructureCommand {
       (structure) => structure.title === structureName
     );
     const structureToAdd = STRUCTURES[structureToAddIndex];
-    const structureUri = `${structureToAdd.uriBase}${uuid()}`;
+
+    const structureUuid =
+      options && options.isTemplate ? '${generateUuid()}' : uuid();
+    const structureUri = `${structureToAdd.uriBase}${structureUuid}`;
     const limitedDatastore = controller.datastore.limitToRange(
       controller.selection.lastRange,
       'rangeIsInside'

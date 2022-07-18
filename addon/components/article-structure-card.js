@@ -22,7 +22,12 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
 
   @action
   insertArticle() {
-    this.args.controller.executeCommand('insert-article', this.args.controller);
+    this.args.controller.executeCommand(
+      'insert-article',
+      this.args.controller,
+      undefined,
+      this.args.widgetArgs.options
+    );
   }
 
   @action
@@ -30,7 +35,8 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
     this.args.controller.executeCommand(
       'insert-paragraph',
       this.args.controller,
-      this.articleUri
+      this.articleUri,
+      this.args.widgetArgs.options
     );
   }
 

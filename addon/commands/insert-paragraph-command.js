@@ -11,7 +11,7 @@ export default class InsertParagraphCommand {
     return true;
   }
 
-  execute(controller, articleUri) {
+  execute(controller, articleUri, options) {
     const articleContentObjectNode = controller.datastore
       .match(`>${articleUri}`, '>https://say.data.gift/ns/body', null)
       .asObjectNodes()
@@ -19,7 +19,9 @@ export default class InsertParagraphCommand {
     const articleContentElement = [...articleContentObjectNode.nodes].find(
       (node) => node.getAttribute('property') === 'say:body'
     );
-    const paragraphUri = `http://data.lblod.info/paragraph/${uuid()}`;
+    const paragraphUuid =
+      options && options.isTemplate ? '${generateUuid()}' : uuid();
+    const paragraphUri = `http://data.lblod.info/paragraph/${paragraphUuid}`;
     if (
       articleContentElement.children.length > 1 ||
       articleContentElement.children[0].attributeMap.get('typeof') ===

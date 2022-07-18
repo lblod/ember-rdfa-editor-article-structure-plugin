@@ -12,7 +12,7 @@ export default class InsertArticleCommand {
     return true;
   }
 
-  execute(controller, articleContent) {
+  execute(controller, articleContent, options) {
     const treeWalker = new controller.treeWalkerFactory({
       root: controller.modelRoot,
       start: controller.selection.lastRange._start.parentElement,
@@ -67,7 +67,9 @@ export default class InsertArticleCommand {
         articleContainerNode.getMaxOffset()
       );
     }
-    const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
+    const articleUuid =
+      options && options.isTemplate ? '${generateUuid()}' : uuid();
+    const articleUri = `http://data.lblod.info/artikels/${articleUuid}`;
     const articleHtml = `
       <div property="say:hasPart" typeof="say:Article" resource="${articleUri}">
         <div property="say:heading">
