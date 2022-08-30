@@ -12,7 +12,7 @@ export default class InsertArticleCommand {
     return true;
   }
 
-  execute(controller, articleContent) {
+  execute(controller, articleContent, options) {
     const treeWalker = new controller.treeWalkerFactory({
       root: controller.modelRoot,
       start: controller.selection.lastRange._start.parentElement,
