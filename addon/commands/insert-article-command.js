@@ -32,10 +32,12 @@ export default class InsertArticleCommand {
             return 0; // We accept the result
           }
         } else {
+          const rdfaContainer =
+            options && options.rdfaContainer
+              ? options.rdfaContainer
+              : 'https://say.data.gift/ns/DocumentContent';
           const isArticleContainer =
-            node.getAttribute('property') === 'prov:value' &&
-            (!node.parent ||
-              node.parent.getAttribute('typeof') !== 'say:Article');
+            node.getAttribute('typeof') === rdfaContainer;
           if (isArticleContainer) {
             const substructures = node.children.filter((child) =>
               structureTypes.includes(child.getAttribute('typeof'))
