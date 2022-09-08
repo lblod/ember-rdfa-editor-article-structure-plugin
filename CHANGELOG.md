@@ -4,6 +4,15 @@
 
 
 
+
+## 0.2.9 (2022-09-08)
+
+#### :house: Internal
+* [#5](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/5) Change version range for editor and update package-lock to version 2 ([@elpoelma](https://github.com/elpoelma))
+
+#### Committers: 1
+- Elena Poelman ([@elpoelma](https://github.com/elpoelma))
+
 ## 0.2.8 (2022-08-30)
 
 ## 0.2.7 (2022-08-30)
