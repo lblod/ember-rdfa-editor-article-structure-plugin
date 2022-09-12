@@ -5,6 +5,15 @@
 
 
 
+
+## 0.3.0 (2022-09-12)
+
+#### :house: Internal
+* [#6](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/6) Bump editor and ember-appuniversum packages ([@elpoelma](https://github.com/elpoelma))
+
+#### Committers: 1
+- Elena Poelman ([@elpoelma](https://github.com/elpoelma))
+
 ## 0.2.9 (2022-09-08)
 
 #### :house: Internal
