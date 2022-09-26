@@ -1,39 +1,27 @@
 export default class DeleteNodeFromUriCommand {
-  name = 'delete-node-from-uri';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, uri, type) {
-    const subjectNode = controller.datastore
+  execute({ transaction }, { uri, type }) {
+    const subjectNode = transaction
+      .getCurrentDataStore()
       .match(`>${uri}`, null, null)
       .asSubjectNodes()
       .next().value;
     const node = [...subjectNode.nodes][0];
     const container = node.parent;
-    this.model.change((mutator) => {
-      mutator.deleteNode(node);
-    });
+    transaction.deleteNode(node);
     if (container.children.length === 0) {
-      controller.executeCommand(
-        'insert-html',
-        '<span class="mark-highlight-manual">Voer inhoud in</span>',
-        controller.rangeFactory.fromInNode(
+      transaction.commands.insertHtml({
+        htmlString: '<span class="mark-highlight-manual">Voer inhoud in</span>',
+        range: transaction.rangeFactory.fromInNode(
           container,
           0,
           container.getMaxOffset()
-        )
-      );
+        ),
+      });
     }
-    controller.executeCommand(
-      `recalculate-${type}-numbers`,
-      controller,
-      container
-    );
+    transaction.commands[`recalculate-${type}-numbers`]({ container });
   }
 }

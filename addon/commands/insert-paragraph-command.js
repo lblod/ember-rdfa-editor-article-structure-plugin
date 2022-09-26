@@ -1,18 +1,13 @@
 import { v4 as uuid } from 'uuid';
 
 export default class InsertParagraphCommand {
-  name = 'insert-paragraph';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, articleUri) {
-    const articleContentObjectNode = controller.datastore
+  execute({ transaction }, { articleUri }) {
+    const articleContentObjectNode = transaction
+      .getCurrentDataStore()
       .match(`>${articleUri}`, '>https://say.data.gift/ns/body', null)
       .asObjectNodes()
       .next().value;
@@ -33,15 +28,14 @@ export default class InsertParagraphCommand {
           <span class="mark-highlight-manual">Voer inhoud in</span>
         </div>
       `;
-      controller.executeCommand(
-        'insert-html',
-        paragraphHtml,
-        controller.rangeFactory.fromInElement(
+      transaction.commands.insertHtml({
+        htmlString: paragraphHtml,
+        range: transaction.rangeFactory.fromInElement(
           articleContentElement,
           articleContentElement.getMaxOffset(),
           articleContentElement.getMaxOffset()
-        )
-      );
+        ),
+      });
     } else {
       const paragraphHtml = `
         <div property="say:hasParagraph" typeof="say:Paragraph" resource="${paragraphUri}">
@@ -49,45 +43,42 @@ export default class InsertParagraphCommand {
         </div>
       `;
       const children = [...articleContentElement.children];
-      controller.executeCommand(
-        'insert-html',
-        paragraphHtml,
-        controller.rangeFactory.fromInElement(
+      transaction.commands.insertHtml({
+        htmlString: paragraphHtml,
+        range: transaction.rangeFactory.fromInElement(
           articleContentElement,
           0,
           articleContentElement.getMaxOffset()
-        )
-      );
+        ),
+      });
       const paragraphInserted = [
-        ...controller.datastore
+        ...transaction
+          .getCurrentDataStore()
           .match(`>${paragraphUri}`, null, null)
           .asSubjectNodes()
           .next().value.nodes,
       ][0];
-      const rangeToInsertContent = controller.rangeFactory.fromInNode(
+      const rangeToInsertContent = transaction.rangeFactory.fromInNode(
         paragraphInserted,
         paragraphInserted.getMaxOffset(),
         paragraphInserted.getMaxOffset()
       );
-      this.model.change((mutator) => {
-        mutator.insertNodes(rangeToInsertContent, ...children);
-      });
+      transaction.insertNodes(rangeToInsertContent, ...children);
       return;
     }
-    const newParagraphElementSubjectNodes = controller.datastore
+    const newParagraphElementSubjectNodes = transaction
+      .getCurrentDataStore()
       .match(`>${paragraphUri}`, null, null)
       .asSubjectNodes()
       .next().value;
     if (newParagraphElementSubjectNodes) {
       const newParagraphElement = [...newParagraphElementSubjectNodes.nodes][0];
-      const range = controller.rangeFactory.fromInElement(
+      const range = transaction.rangeFactory.fromInElement(
         newParagraphElement,
         1,
         1
       );
-      this.model.change(() => {
-        controller.selection.selectRange(range);
-      });
+      transaction.selectRange(range);
     }
   }
   generateParagraphNumber(container) {

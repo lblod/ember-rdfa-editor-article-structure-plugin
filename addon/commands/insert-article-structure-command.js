@@ -5,17 +5,11 @@ import searchForSuperStructure from '../utils/searchForSuperStructure';
 import romanize from '../utils/romanize';
 
 export default class InsertArticleStructureCommand {
-  name = 'insert-article-structure';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, structureName, options) {
+  execute({ transaction }, { controller, structureName, options }) {
     const rdfaContainer =
       options && options.rdfaContainer
         ? options.rdfaContainer
@@ -25,12 +19,11 @@ export default class InsertArticleStructureCommand {
     );
     const structureToAdd = STRUCTURES[structureToAddIndex];
     const structureUri = `${structureToAdd.uriBase}${uuid()}`;
-    const limitedDatastore = controller.datastore.limitToRange(
-      controller.selection.lastRange,
-      'rangeIsInside'
-    );
+    const limitedDatastore = transaction
+      .getCurrentDataStore()
+      .limitToRange(transaction.currentSelection.lastRange, 'rangeIsInside');
     const structureOfSameType = searchForType(
-      controller.datastore,
+      transaction.getCurrentDataStore(),
       limitedDatastore,
       structureToAdd.type
     );
@@ -42,19 +35,17 @@ export default class InsertArticleStructureCommand {
     if (!documentContent) {
       documentContentNode = controller.createModelElement('div');
       documentContentNode.setAttribute('typeof', rdfaContainer);
-      this.model.change((mutator) => {
-        mutator.insertNodes(
-          controller.selection.lastRange,
-          documentContentNode
-        );
-      });
+      transaction.insertNodes(
+        transaction.currentSelection.lastRange,
+        documentContentNode
+      );
     } else {
       documentContentNode = [...documentContent.nodes][0];
     }
     if (!structureOfSameType) {
       // Needs to wrap everything
       const parentStructureObjectNode = searchForSuperStructure(
-        controller.datastore,
+        transaction.getCurrentDataStore(),
         limitedDatastore,
         structureToAddIndex
       );
@@ -74,7 +65,7 @@ export default class InsertArticleStructureCommand {
       }
       const children = [...containerNode.children];
       const structureNode = controller.createModelElement('div');
-      const rangeToInsert = controller.rangeFactory.fromInNode(
+      const rangeToInsert = transaction.rangeFactory.fromInNode(
         containerNode,
         0,
         containerNode.getMaxOffset()
@@ -85,9 +76,7 @@ export default class InsertArticleStructureCommand {
       const structureContent = controller.createModelElement('div');
       structureContent.setAttribute('property', 'say:body');
       structureContent.setAttribute('datatype', 'rdf:XMLLiteral');
-      this.model.change((mutator) => {
-        mutator.insertNodes(rangeToInsert, structureNode);
-      });
+      transaction.insertNodes(rangeToInsert, structureNode);
       //TODO: make this with model elements if possible
       const titleHtml = `
         <${structureToAdd.heading} property="say:heading">
@@ -95,38 +84,33 @@ export default class InsertArticleStructureCommand {
           <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
         </${structureToAdd.heading}>
       `;
-      controller.executeCommand(
-        'insert-html',
-        titleHtml,
-        controller.rangeFactory.fromInNode(
+      transaction.commands.insertHtml({
+        htmlString: titleHtml,
+        range: transaction.rangeFactory.fromInNode(
           structureNode,
           0,
           structureNode.getMaxOffset()
-        )
-      );
-      const rangeToInsertContent = controller.rangeFactory.fromInNode(
+        ),
+      });
+      const rangeToInsertContent = transaction.rangeFactory.fromInNode(
         structureNode,
         structureNode.getMaxOffset(),
         structureNode.getMaxOffset()
       );
-      this.model.change((mutator) => {
-        mutator.insertNodes(rangeToInsertContent, structureContent);
-      });
-      const rangeToInsertChildrens = controller.rangeFactory.fromInNode(
+      transaction.insertNodes(rangeToInsertContent, structureContent);
+      const rangeToInsertChildrens = transaction.rangeFactory.fromInNode(
         structureContent,
         0,
         structureContent.getMaxOffset()
       );
       if (children.length) {
-        this.model.change((mutator) => {
-          mutator.insertNodes(rangeToInsertChildrens, ...children);
-        });
+        transaction.insertNodes(rangeToInsertChildrens, ...children);
       } else {
-        controller.executeCommand(
-          'insert-html',
-          '<span class="mark-highlight-manual">Voer inhoud in</span>',
-          rangeToInsertChildrens
-        );
+        transaction.commands.insertHtml({
+          htmlString:
+            '<span class="mark-highlight-manual">Voer inhoud in</span>',
+          range: rangeToInsertChildrens,
+        });
       }
     } else {
       // Needs to be added at the end
@@ -135,7 +119,7 @@ export default class InsertArticleStructureCommand {
         ? parentStructure.type
         : undefined;
       const parentStructureObjectNode = searchForType(
-        controller.datastore,
+        transaction.getCurrentDataStore(),
         limitedDatastore,
         parentStructureType
       );
@@ -149,7 +133,7 @@ export default class InsertArticleStructureCommand {
             break;
           }
         }
-        const rangeToInsert = controller.rangeFactory.fromInNode(
+        const rangeToInsert = transaction.rangeFactory.fromInNode(
           contentNode,
           contentNode.getMaxOffset(),
           contentNode.getMaxOffset()
@@ -171,10 +155,13 @@ export default class InsertArticleStructureCommand {
           </div>
         </div>
       `;
-        controller.executeCommand('insert-html', structureHtml, rangeToInsert);
+        transaction.commands.insertHtml({
+          htmlString: structureHtml,
+          range: rangeToInsert,
+        });
       } else {
         //Added to the article container
-        const rangeToInsert = controller.rangeFactory.fromInNode(
+        const rangeToInsert = transaction.rangeFactory.fromInNode(
           documentContentNode,
           documentContentNode.getMaxOffset(),
           documentContentNode.getMaxOffset()
@@ -196,21 +183,23 @@ export default class InsertArticleStructureCommand {
           </div>
         </div>
       `;
-        controller.executeCommand('insert-html', structureHtml, rangeToInsert);
+        transaction.commands.insertHtml({
+          htmlString: structureHtml,
+          range: rangeToInsert,
+        });
       }
     }
-    const titleNode = controller.datastore
+    const titleNode = transaction
+      .getCurrentDataStore()
       .match(`>${structureUri}`, 'ext:title', null)
       .asPredicateNodeMapping()
       .single().nodes[0];
-    this.model.change(() => {
-      const range = controller.rangeFactory.fromInElement(
-        titleNode,
-        0,
-        titleNode.getMaxOffset()
-      );
-      controller.selection.selectRange(range);
-    });
+    const range = transaction.rangeFactory.fromInElement(
+      titleNode,
+      0,
+      titleNode.getMaxOffset()
+    );
+    transaction.selectRange(range);
   }
   generateStructureNumber(container) {
     const substructures = container.children.filter((node) =>

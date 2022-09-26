@@ -1,12 +1,6 @@
 export default class MoveParagraphCommand {
-  name = 'move-paragraph';
-
-  constructor(model) {
-    this.model = model;
-  }
-
-  canExecute(controller, paragraphUri, moveUp) {
-    const paragraphSubjectNode = controller.datastore
+  canExecute(state, { paragraphUri, moveUp }) {
+    const paragraphSubjectNode = state.datastore
       .match(`>${paragraphUri}`, null, null)
       .asSubjectNodes()
       .next().value;
@@ -25,7 +19,7 @@ export default class MoveParagraphCommand {
     ) {
       return true;
     } else {
-      const articles = controller.datastore
+      const articles = state.datastore
         .match(null, 'a', '>https://say.data.gift/ns/Article')
         .asPredicateNodes()
         .next().value;
@@ -49,8 +43,9 @@ export default class MoveParagraphCommand {
     }
   }
 
-  execute(controller, paragraphUri, moveUp) {
-    const paragraphSubjectNode = controller.datastore
+  execute(transaction, { paragraphUri, moveUp }) {
+    const paragraphSubjectNode = transaction
+      .getCurrentDataStore()
       .match(`>${paragraphUri}`, null, null)
       .asSubjectNodes()
       .next().value;
@@ -72,30 +67,25 @@ export default class MoveParagraphCommand {
       const paragraphB = paragraphs[bIndex];
 
       const paragraphARange =
-        controller.rangeFactory.fromAroundNode(paragraphA);
+        transaction.rangeFactory.fromAroundNode(paragraphA);
       const paragraphBRange =
-        controller.rangeFactory.fromAroundNode(paragraphB);
+        transaction.rangeFactory.fromAroundNode(paragraphB);
       const paragraphAToInsert = paragraphA.clone();
       const paragraphBToInsert = paragraphB.clone();
-      this.model.change((mutator) => {
-        mutator.insertNodes(paragraphBRange, paragraphAToInsert);
-        mutator.insertNodes(paragraphARange, paragraphBToInsert);
+      transaction.insertNodes(paragraphBRange, paragraphAToInsert);
+      transaction.insertNodes(paragraphARange, paragraphBToInsert);
+      transaction.commands['recalculate-paragraph-numbers']({
+        container: paragraphContainer,
       });
-      controller.executeCommand(
-        'recalculate-paragraph-numbers',
-        controller,
-        paragraphContainer
+      const range = transaction.rangeFactory.fromInElement(
+        paragraphAToInsert,
+        0,
+        0
       );
-      this.model.change(() => {
-        const range = controller.rangeFactory.fromInElement(
-          paragraphAToInsert,
-          0,
-          0
-        );
-        controller.selection.selectRange(range);
-      });
+      transaction.selectRange(range);
     } else {
-      const articles = controller.datastore
+      const articles = transaction
+        .getCurrentDataStore()
         .match(null, 'a', '>https://say.data.gift/ns/Article')
         .asPredicateNodes()
         .next().value;
@@ -121,13 +111,13 @@ export default class MoveParagraphCommand {
           articleContent.children[0].getAttribute('class') ===
             'mark-highlight-manual'
         ) {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             articleContent,
             0,
             articleContent.getMaxOffset()
           );
         } else {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             articleContent,
             articleContent.getMaxOffset(),
             articleContent.getMaxOffset()
@@ -135,39 +125,32 @@ export default class MoveParagraphCommand {
         }
         const originalContainer = paragraphNode.parent;
         const insertparagraph = paragraphNode.clone();
-        this.model.change((mutator) => {
-          mutator.insertNodes(insertRange, insertparagraph);
-          mutator.deleteNode(paragraphNode);
-        });
+        transaction.insertNodes(insertRange, insertparagraph);
+        transaction.deleteNode(paragraphNode);
         if (originalContainer.children.length === 0) {
-          controller.executeCommand(
-            'insert-html',
-            '<span class="mark-highlight-manual">Voer inhoud in</span>',
-            controller.rangeFactory.fromInNode(
-              originalContainer,
-              0,
-              originalContainer.getMaxOffset()
-            )
-          );
-        }
-        controller.executeCommand(
-          'recalculate-paragraph-numbers',
-          controller,
-          paragraphContainer
-        );
-        controller.executeCommand(
-          'recalculate-paragraph-numbers',
-          controller,
-          articleContent
-        );
-        this.model.change(() => {
-          const range = controller.rangeFactory.fromInElement(
-            insertparagraph,
+          const range = transaction.rangeFactory.fromInNode(
+            originalContainer,
             0,
-            0
+            originalContainer.getMaxOffset()
           );
-          controller.selection.selectRange(range);
+          transaction.commands.insertHtml({
+            htmlString:
+              '<span class="mark-highlight-manual">Voer inhoud in</span>',
+            range,
+          });
+        }
+        transaction.commands['recalculate-paragraph-numbers']({
+          container: paragraphContainer,
         });
+        transaction.commands['recalculate-paragraph-numbers']({
+          container: articleContent,
+        });
+        const range = transaction.rangeFactory.fromInElement(
+          insertparagraph,
+          0,
+          0
+        );
+        transaction.selectRange(range);
       }
     }
   }

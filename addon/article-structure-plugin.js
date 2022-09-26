@@ -40,36 +40,33 @@ export default class ArticleStructurePlugin {
 
   initialize(controller, options) {
     this.controller = controller;
-    controller.registerCommand(
-      new InsertArticleCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new InsertParagraphCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new InsertArticleStructureCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveArticleCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateArticleNumbersCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveParagraphCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateParagraphNumbersCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveStructureCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateStructureNumbersCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new DeleteNodeFromUriCommand(controller._rawEditor._model)
-    );
+    this.controller.perform((tr) => {
+      tr.registerCommand('insertArticle', new InsertArticleCommand());
+      tr.registerCommand('insertParagraph', new InsertParagraphCommand());
+      tr.registerCommand(
+        'insertArticleStructure',
+        new InsertArticleStructureCommand()
+      );
+      tr.registerCommand('moveArticle', new MoveArticleCommand());
+      tr.registerCommand('moveParagraph', new MoveParagraphCommand());
+      tr.registerCommand('moveStructure', new MoveStructureCommand());
+      tr.registerCommand('deleteNodeFromUri', new DeleteNodeFromUriCommand());
+      tr.registerCommand(
+        'recalculate-article-numbers',
+        new RecalculateArticleNumbersCommand()
+      );
+
+      tr.registerCommand(
+        'recalculate-paragraph-numbers',
+        new RecalculateParagraphNumbersCommand()
+      );
+
+      tr.registerCommand(
+        'recalculate-structure-numbers',
+        new RecalculateStructureNumbersCommand()
+      );
+    });
+
     controller.registerWidget({
       componentName: 'article-structure-card',
       identifier: 'article-structure-plugin/card',

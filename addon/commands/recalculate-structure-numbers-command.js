@@ -2,20 +2,15 @@ import romanize from '../utils/romanize';
 import { structureTypes } from '../utils/constants';
 
 export default class RecalculateStructureNumbersCommand {
-  name = 'recalculate-structure-numbers';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, container, type) {
-    const structures = controller.datastore
+  execute({ transaction }, { container, type }) {
+    const structures = transaction
+      .getCurrentDataStore()
       .limitToRange(
-        controller.rangeFactory.fromAroundNode(container),
+        transaction.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
       .match(null, 'a', `>${type}`)
@@ -30,11 +25,12 @@ export default class RecalculateStructureNumbersCommand {
     const structuresArray = [...structures.nodes];
     for (let i = 0; i < structuresArray.length; i++) {
       const structure = structuresArray[i];
-      this.replaceNumberIfNeeded(controller, structure, i);
+      this.replaceNumberIfNeeded(transaction, structure, i);
     }
   }
-  replaceNumberIfNeeded(controller, structure, index) {
-    const structureNumberObjectNode = controller.datastore
+  replaceNumberIfNeeded(transaction, structure, index) {
+    const structureNumberObjectNode = transaction
+      .getCurrentDataStore()
       .match(
         `>${structure.getAttribute('resource')}`,
         '>http://data.europa.eu/eli/ontology#number',
@@ -46,15 +42,15 @@ export default class RecalculateStructureNumbersCommand {
     const structureNumberElement = [...structureNumberObjectNode.nodes][0];
     const structureNumberExpected = romanize(index + 1);
     if (structureNumber !== structureNumberExpected) {
-      controller.executeCommand(
-        'insert-text',
-        structureNumberExpected,
-        controller.rangeFactory.fromInNode(
-          structureNumberElement,
-          0,
-          structureNumberElement.getMaxOffset()
-        )
+      const range = transaction.rangeFactory.fromInNode(
+        structureNumberElement,
+        0,
+        structureNumberElement.getMaxOffset()
       );
+      transaction.commands.insertText({
+        text: structureNumberExpected,
+        range,
+      });
     }
   }
 }

@@ -1,18 +1,13 @@
 export default class RecalculateParagraphNumbersCommand {
-  name = 'recalculate-paragraph-numbers';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, container) {
-    const paragraphs = controller.datastore
+  execute({ transaction }, container) {
+    const paragraphs = transaction
+      .getCurrentDataStore()
       .limitToRange(
-        controller.rangeFactory.fromAroundNode(container),
+        transaction.rangeFactory.fromAroundNode(container),
         'rangeContains'
       )
       .match(null, 'a', '>https://say.data.gift/ns/Paragraph')
@@ -22,11 +17,12 @@ export default class RecalculateParagraphNumbersCommand {
     const paragraphsArray = [...paragraphs.nodes];
     for (let i = 0; i < paragraphsArray.length; i++) {
       const paragraph = paragraphsArray[i];
-      this.replaceNumberIfNeeded(controller, paragraph, i);
+      this.replaceNumberIfNeeded(transaction, paragraph, i);
     }
   }
-  replaceNumberIfNeeded(controller, paragraph, index) {
-    const paragraphNumberObjectNode = controller.datastore
+  replaceNumberIfNeeded(transaction, paragraph, index) {
+    const paragraphNumberObjectNode = transaction
+      .getCurrentDataStore()
       .match(
         `>${paragraph.getAttribute('resource')}`,
         '>http://data.europa.eu/eli/ontology#number',
@@ -38,15 +34,15 @@ export default class RecalculateParagraphNumbersCommand {
     const paragraphNumberElement = [...paragraphNumberObjectNode.nodes][0];
     const paragraphNumberExpected = index + 1;
     if (paragraphNumber !== paragraphNumberExpected) {
-      controller.executeCommand(
-        'insert-text',
-        String(paragraphNumberExpected),
-        controller.rangeFactory.fromInNode(
-          paragraphNumberElement,
-          0,
-          paragraphNumberElement.getMaxOffset()
-        )
+      const range = transaction.rangeFactory.fromInNode(
+        paragraphNumberElement,
+        0,
+        paragraphNumberElement.getMaxOffset()
       );
+      transaction.insertText({
+        text: String(paragraphNumberExpected),
+        range,
+      });
     }
   }
 }

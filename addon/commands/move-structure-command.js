@@ -1,14 +1,8 @@
 import { STRUCTURES, structureTypes } from '../utils/constants';
 
 export default class MoveStructureCommand {
-  name = 'move-structure';
-
-  constructor(model) {
-    this.model = model;
-  }
-
-  canExecute(controller, structureUri, moveUp) {
-    const structureSubjectNode = controller.datastore
+  canExecute(state, { controller, structureUri, moveUp }) {
+    const structureSubjectNode = state.datastore
       .match(`>${structureUri}`, null, null)
       .asSubjectNodes()
       .next().value;
@@ -27,7 +21,7 @@ export default class MoveStructureCommand {
     ) {
       return true;
     } else {
-      const currentStructureType = controller.datastore
+      const currentStructureType = state.datastore
         .match(`>${structureUri}`, 'a', null)
         .asQuads()
         .next().value.object.value;
@@ -39,9 +33,9 @@ export default class MoveStructureCommand {
         return false;
       }
       const treeWalker = new controller.treeWalkerFactory({
-        root: controller.modelRoot,
+        root: state.document,
         start: structureNode,
-        end: controller.modelRoot,
+        end: state.document,
         reverse: moveUp,
         filter: (node) => {
           const isStructure = structureTypes.includes(
@@ -65,20 +59,22 @@ export default class MoveStructureCommand {
     }
   }
 
-  execute(controller, structureUri, moveUp) {
-    const structureSubjectNode = controller.datastore
+  execute({ transaction }, { controller, structureUri, moveUp }) {
+    let structureSubjectNode = transaction
+      .getCurrentDataStore()
       .match(`>${structureUri}`, null, null)
       .asSubjectNodes()
       .next().value;
-    const structureNode = [...structureSubjectNode.nodes][0];
-    const structureContainer = structureNode.parent;
+    let structureNode = [...structureSubjectNode.nodes][0];
+    let structureContainer = structureNode.parent;
     const structures = structureContainer.children.filter(
       (child) => child.modelNodeType === 'ELEMENT'
     );
     const structureIndex = structures.findIndex(
       (structure) => structure === structureNode
     );
-    const currentStructureType = controller.datastore
+    const currentStructureType = transaction
+      .getCurrentDataStore()
       .match(`>${structureUri}`, 'a', null)
       .asQuads()
       .next().value.object.value;
@@ -92,29 +88,23 @@ export default class MoveStructureCommand {
       const structureB = structures[bIndex];
 
       const structureARange =
-        controller.rangeFactory.fromAroundNode(structureA);
+        transaction.rangeFactory.fromAroundNode(structureA);
       const structureBRange =
-        controller.rangeFactory.fromAroundNode(structureB);
+        transaction.rangeFactory.fromAroundNode(structureB);
       const structureAToInsert = structureA.clone();
       const structureBToInsert = structureB.clone();
-      this.model.change((mutator) => {
-        mutator.insertNodes(structureBRange, structureAToInsert);
-        mutator.insertNodes(structureARange, structureBToInsert);
+      transaction.insertNodes(structureBRange, structureAToInsert);
+      transaction.insertNodes(structureARange, structureBToInsert);
+      transaction.commands['recalculate-structure-numbers']({
+        container: structureAToInsert.parent,
+        type: currentStructureType,
       });
-      controller.executeCommand(
-        'recalculate-structure-numbers',
-        controller,
-        structureContainer,
-        currentStructureType
+      transaction.commands['recalculate-article-numbers']();
+      const heading = structureAToInsert.children.find(
+        (child) => child.getAttribute('property') === 'say:heading'
       );
-      controller.executeCommand('recalculate-article-numbers', controller);
-      this.model.change(() => {
-        const heading = structureAToInsert.children.find(
-          (child) => child.getAttribute('property') === 'say:heading'
-        );
-        const range = controller.rangeFactory.fromInElement(heading, 0, 0);
-        controller.selection.selectRange(range);
-      });
+      const range = transaction.rangeFactory.fromInElement(heading, 0, 0);
+      transaction.selectRange(range);
     } else {
       // Find next parent structure up the chain
       const currentStructureIndex = STRUCTURES.findIndex(
@@ -122,9 +112,9 @@ export default class MoveStructureCommand {
       );
       const parentStructure = STRUCTURES[currentStructureIndex - 1];
       const treeWalker = new controller.treeWalkerFactory({
-        root: controller.modelRoot,
+        root: transaction.currentDocument,
         start: structureNode,
-        end: controller.modelRoot,
+        end: transaction.currentDocument,
         reverse: moveUp,
         filter: (node) => {
           const isStructure = structureTypes.includes(
@@ -151,13 +141,13 @@ export default class MoveStructureCommand {
           structureContent.children[0].getAttribute('class') ===
             'mark-highlight-manual'
         ) {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             structureContent,
             0,
             structureContent.getMaxOffset()
           );
         } else {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             structureContent,
             structureContent.getMaxOffset(),
             structureContent.getMaxOffset()
@@ -165,41 +155,34 @@ export default class MoveStructureCommand {
         }
         const originalContainer = structureNode.parent;
         const insertStructure = structureNode.clone();
-        this.model.change((mutator) => {
-          mutator.insertNodes(insertRange, insertStructure);
-          mutator.deleteNode(structureNode);
-        });
+        transaction.insertNodes(insertRange, insertStructure);
+        transaction.deleteNode(structureNode);
         if (originalContainer.children.length === 0) {
-          controller.executeCommand(
-            'insert-html',
-            '<span class="mark-highlight-manual">Voer inhoud in</span>',
-            controller.rangeFactory.fromInNode(
+          transaction.commands.insertHtml({
+            htmlString:
+              '<span class="mark-highlight-manual">Voer inhoud in</span>',
+            range: transaction.rangeFactory.fromInNode(
               originalContainer,
               0,
               originalContainer.getMaxOffset()
-            )
-          );
+            ),
+          });
         }
-        controller.executeCommand(
-          'recalculate-structure-numbers',
-          controller,
-          structureContainer,
-          currentStructureType
-        );
-        controller.executeCommand(
-          'recalculate-structure-numbers',
-          controller,
-          structureContent,
-          currentStructureType
-        );
-        controller.executeCommand('recalculate-article-numbers', controller);
-        this.model.change(() => {
-          const heading = insertStructure.children.find(
-            (child) => child.getAttribute('property') === 'say:heading'
-          );
-          const range = controller.rangeFactory.fromInElement(heading, 0, 0);
-          controller.selection.selectRange(range);
+        transaction.commands['recalculate-structure-numbers']({});
+        transaction.commands['recalculate-structure-numbers']({
+          container: structureContainer,
+          type: currentStructureType,
         });
+        transaction.commands['recalculate-structure-numbers']({
+          container: structureContent,
+          type: currentStructureType,
+        });
+        transaction.commands['recalculate-article-numbers']();
+        const heading = insertStructure.children.find(
+          (child) => child.getAttribute('property') === 'say:heading'
+        );
+        const range = transaction.rangeFactory.fromInElement(heading, 0, 0);
+        transaction.selectRange(range);
       }
     }
   }

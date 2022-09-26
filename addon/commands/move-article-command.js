@@ -1,14 +1,8 @@
 import { structureTypes } from '../utils/constants';
 
 export default class MoveArticleCommand {
-  name = 'move-article';
-
-  constructor(model) {
-    this.model = model;
-  }
-
-  canExecute(controller, articleUri, moveUp) {
-    const articleSubjectNode = controller.datastore
+  canExecute(state, { controller, articleUri, moveUp }) {
+    const articleSubjectNode = state.datastore
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
@@ -29,9 +23,9 @@ export default class MoveArticleCommand {
     } else {
       // Find next structure up the chain with a container ready for articles
       const treeWalker = new controller.treeWalkerFactory({
-        root: controller.modelRoot,
+        root: state.document,
         start: articleNode,
-        end: controller.modelRoot,
+        end: state.document,
         reverse: moveUp,
         filter: (node) => {
           const isStructure = structureTypes.includes(
@@ -60,8 +54,9 @@ export default class MoveArticleCommand {
     }
   }
 
-  execute(controller, articleUri, moveUp) {
-    const articleSubjectNode = controller.datastore
+  execute({ transaction }, { controller, articleUri, moveUp }) {
+    const articleSubjectNode = transaction
+      .getCurrentDataStore()
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
@@ -82,29 +77,25 @@ export default class MoveArticleCommand {
       const bIndex = moveUp ? articleIndex - 1 : articleIndex + 1;
       const articleB = articles[bIndex];
 
-      const articleARange = controller.rangeFactory.fromAroundNode(articleA);
-      const articleBRange = controller.rangeFactory.fromAroundNode(articleB);
+      const articleARange = transaction.rangeFactory.fromAroundNode(articleA);
+      const articleBRange = transaction.rangeFactory.fromAroundNode(articleB);
       const articleAToInsert = articleA.clone();
       const articleBToInsert = articleB.clone();
-      this.model.change((mutator) => {
-        mutator.insertNodes(articleBRange, articleAToInsert);
-        mutator.insertNodes(articleARange, articleBToInsert);
-      });
-      controller.executeCommand('recalculate-article-numbers', controller);
-      this.model.change(() => {
-        const range = controller.rangeFactory.fromInElement(
-          articleAToInsert,
-          0,
-          0
-        );
-        controller.selection.selectRange(range);
-      });
+      transaction.insertNodes(articleBRange, articleAToInsert);
+      transaction.insertNodes(articleARange, articleBToInsert);
+      transaction.commands['recalculate-article-numbers']();
+      const range = transaction.rangeFactory.fromInElement(
+        articleAToInsert,
+        0,
+        0
+      );
+      transaction.selectRange(range);
     } else {
       // Find next structure up the chain with a container ready for articles
       const treeWalker = new controller.treeWalkerFactory({
-        root: controller.modelRoot,
+        root: transaction.currentDocument,
         start: articleNode,
-        end: controller.modelRoot,
+        end: transaction.currentDocument,
         reverse: moveUp,
         filter: (node) => {
           const isStructure = structureTypes.includes(
@@ -136,13 +127,13 @@ export default class MoveArticleCommand {
           structureContent.children[0].getAttribute('class') ===
             'mark-highlight-manual'
         ) {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             structureContent,
             0,
             structureContent.getMaxOffset()
           );
         } else {
-          insertRange = controller.rangeFactory.fromInNode(
+          insertRange = transaction.rangeFactory.fromInNode(
             structureContent,
             structureContent.getMaxOffset(),
             structureContent.getMaxOffset()
@@ -150,30 +141,26 @@ export default class MoveArticleCommand {
         }
         const originalContainer = articleNode.parent;
         const insertArticle = articleNode.clone();
-        this.model.change((mutator) => {
-          mutator.insertNodes(insertRange, insertArticle);
-          mutator.deleteNode(articleNode);
-        });
+        transaction.insertNodes(insertRange, insertArticle);
+        transaction.deleteNode(articleNode);
         if (originalContainer.children.length === 0) {
-          controller.executeCommand(
-            'insert-html',
-            '<span class="mark-highlight-manual">Voer inhoud in</span>',
-            controller.rangeFactory.fromInNode(
+          transaction.commands.insertHtml({
+            htmlString:
+              '<span class="mark-highlight-manual">Voer inhoud in</span>',
+            range: transaction.rangeFactory.fromInNode(
               originalContainer,
               0,
               originalContainer.getMaxOffset()
-            )
-          );
+            ),
+          });
         }
-        controller.executeCommand('recalculate-article-numbers', controller);
-        this.model.change(() => {
-          const range = controller.rangeFactory.fromInElement(
-            insertArticle,
-            0,
-            0
-          );
-          controller.selection.selectRange(range);
-        });
+        transaction.commands['recalculate-article-numbers']();
+        const range = transaction.rangeFactory.fromInElement(
+          insertArticle,
+          0,
+          0
+        );
+        transaction.selectRange(range);
       }
     }
   }

@@ -2,21 +2,15 @@ import { v4 as uuid } from 'uuid';
 import { structureTypes } from '../utils/constants';
 
 export default class InsertArticleCommand {
-  name = 'insert-article';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller, articleContent, options) {
+  execute({ transaction }, { controller, articleContent, options }) {
     const treeWalker = new controller.treeWalkerFactory({
-      root: controller.modelRoot,
-      start: controller.selection.lastRange._start.parentElement,
-      end: controller.modelRoot,
+      root: transaction.currentDocument,
+      start: transaction.currentSelection.lastRange.start.parentElement,
+      end: transaction.currentDocument,
       reverse: false,
       visitParentUpwards: true,
       filter: (node) => {
@@ -57,13 +51,13 @@ export default class InsertArticleCommand {
       articleContainerNode.children[0].getAttribute('class') ===
         'mark-highlight-manual'
     ) {
-      insertRange = controller.rangeFactory.fromInNode(
+      insertRange = transaction.rangeFactory.fromInNode(
         articleContainerNode,
         0,
         articleContainerNode.getMaxOffset()
       );
     } else {
-      insertRange = controller.rangeFactory.fromInNode(
+      insertRange = transaction.rangeFactory.fromInNode(
         articleContainerNode,
         articleContainerNode.getMaxOffset(),
         articleContainerNode.getMaxOffset()
@@ -90,22 +84,24 @@ export default class InsertArticleCommand {
         </div>
       </div>
     `;
-    controller.executeCommand('insert-html', articleHtml, insertRange);
-    const newArticleElementSubjectNodes = controller.datastore
+    transaction.commands.insertHtml({
+      htmlString: articleHtml,
+      range: insertRange,
+    });
+    const newArticleElementSubjectNodes = transaction
+      .getCurrentDataStore()
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
-    controller.executeCommand('recalculate-article-numbers', controller);
+    transaction.commands['recalculate-article-numbers']({});
     if (newArticleElementSubjectNodes) {
       const newArticleElement = [...newArticleElementSubjectNodes.nodes][0];
-      const range = controller.rangeFactory.fromInElement(
+      const range = transaction.rangeFactory.fromInElement(
         newArticleElement,
         0,
         0
       );
-      this.model.change(() => {
-        controller.selection.selectRange(range);
-      });
+      transaction.selectRange(range);
     }
   }
   removeZeroWidthSpace(text) {

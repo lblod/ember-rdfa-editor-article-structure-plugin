@@ -1,16 +1,11 @@
 export default class RecalculateArticleNumbersCommand {
-  name = 'recalculate-article-numbers';
-
-  constructor(model) {
-    this.model = model;
-  }
-
   canExecute() {
     return true;
   }
 
-  execute(controller) {
-    const articles = controller.datastore
+  execute({ transaction }) {
+    const articles = transaction
+      .getCurrentDataStore()
       .match(null, 'a', '>https://say.data.gift/ns/Article')
       .asPredicateNodes()
       .next().value;
@@ -18,11 +13,12 @@ export default class RecalculateArticleNumbersCommand {
     const articlesArray = [...articles.nodes];
     for (let i = 0; i < articlesArray.length; i++) {
       const article = articlesArray[i];
-      this.replaceNumberIfNeeded(controller, article, i);
+      this.replaceNumberIfNeeded(transaction, article, i);
     }
   }
-  replaceNumberIfNeeded(controller, article, index) {
-    const articleNumberObjectNode = controller.datastore
+  replaceNumberIfNeeded(transaction, article, index) {
+    const articleNumberObjectNode = transaction
+      .getCurrentDataStore()
       .match(
         `>${article.getAttribute('resource')}`,
         '>http://data.europa.eu/eli/ontology#number',
@@ -34,15 +30,14 @@ export default class RecalculateArticleNumbersCommand {
     const articleNumberElement = [...articleNumberObjectNode.nodes][0];
     const articleNumberExpected = index + 1;
     if (articleNumber !== articleNumberExpected) {
-      controller.executeCommand(
-        'insert-text',
-        String(articleNumberExpected),
-        controller.rangeFactory.fromInNode(
+      transaction.commands.insertText({
+        text: String(articleNumberExpected),
+        range: transaction.rangeFactory.fromInNode(
           articleNumberElement,
           0,
           articleNumberElement.getMaxOffset()
-        )
-      );
+        ),
+      });
     }
   }
 }

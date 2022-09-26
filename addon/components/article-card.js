@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { modifiesSelection } from '../utils/step-checker';
 
 export default class EditorPluginsArticleCardComponent extends Component {
   @tracked isOutsideArticle = true;
@@ -10,61 +11,58 @@ export default class EditorPluginsArticleCardComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.args.controller.onEvent(
-      'selectionChanged',
-      this.selectionChangedHandler
-    );
+    this.args.controller.addTransactionStepListener(this.onTransactionUpdate);
   }
 
   @action
   moveArticle(moveUp) {
-    this.args.controller.executeCommand(
-      'move-article',
-      this.args.controller,
-      this.articleUri,
-      moveUp
-    );
+    this.args.controller.perform((tr) => {
+      tr.commands.moveArticle({
+        controller: this.args.controller,
+        articleUri: this.articleUri,
+        moveUp,
+      });
+    });
   }
 
   @action
   removeArticle() {
-    this.args.controller.executeCommand(
-      'delete-node-from-uri',
-      this.args.controller,
-      this.articleUri,
-      'article'
-    );
+    this.args.controller.perform((tr) => {
+      tr.commands.deleteNodeFromUri({
+        uri: this.articleUri,
+        type: 'article',
+      });
+    });
   }
 
   @action
-  selectionChangedHandler() {
-    const limitedDatastore = this.args.controller.datastore.limitToRange(
-      this.args.controller.selection.lastRange,
-      'rangeIsInside'
-    );
+  onTransactionUpdate(transaction, steps) {
+    if (modifiesSelection(steps)) {
+      const limitedDatastore = transaction
+        .getCurrentDataStore()
+        .limitToRange(transaction.currentSelection.lastRange, 'rangeIsInside');
 
-    const article = limitedDatastore
-      .match(null, 'a', '>https://say.data.gift/ns/Article')
-      .asQuads()
-      .next().value;
-    if (!article) {
-      this.isOutsideArticle = true;
-      this.articleUri = undefined;
-    } else {
-      this.isOutsideArticle = false;
-      this.articleUri = article.subject.value;
-      this.canMoveUp = this.args.controller.canExecuteCommand(
-        'move-article',
-        this.args.controller,
-        this.articleUri,
-        true
-      );
-      this.canMoveDown = this.args.controller.canExecuteCommand(
-        'move-article',
-        this.args.controller,
-        this.articleUri,
-        false
-      );
+      const article = limitedDatastore
+        .match(null, 'a', '>https://say.data.gift/ns/Article')
+        .asQuads()
+        .next().value;
+      if (!article) {
+        this.isOutsideArticle = true;
+        this.articleUri = undefined;
+      } else {
+        this.isOutsideArticle = false;
+        this.articleUri = article.subject.value;
+        this.canMoveUp = transaction.commands.moveArticle.canExecute({
+          controller: this.args.controller,
+          articleUri: this.articleUri,
+          moveUp: true,
+        });
+        this.canMoveDown = transaction.commands.moveArticle.canExecute({
+          controller: this.args.controller,
+          articleUri: this.articleUri,
+          moveUp: false,
+        });
+      }
     }
   }
 }
