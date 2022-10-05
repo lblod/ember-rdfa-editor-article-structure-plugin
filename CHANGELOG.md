@@ -6,6 +6,19 @@
 
 
 
+
+## 0.3.1 (2022-10-05)
+
+#### :bug: Bug Fix
+* [#7](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/7) Bugfix/dont fail on empty selection ([@lagartoverde](https://github.com/lagartoverde))
+
+#### :house: Internal
+* [#8](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/8) chore(dx): setup addon to hot-reload when in dev mode ([@abeforgit](https://github.com/abeforgit))
+
+#### Committers: 2
+- Arne Bertrand ([@abeforgit](https://github.com/abeforgit))
+- Oscar Rodriguez Villalobos ([@lagartoverde](https://github.com/lagartoverde))
+
 ## 0.3.0 (2022-09-12)
 
 #### :house: Internal
