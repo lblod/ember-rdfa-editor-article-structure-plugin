@@ -39,8 +39,12 @@ export default class EditorPluginsStructureCardComponent extends Component {
 
   @action
   selectionChangedHandler() {
+    const currentSelection = this.args.controller.selection.lastRange;
+    if (!currentSelection) {
+      return;
+    }
     const limitedDatastore = this.args.controller.datastore.limitToRange(
-      this.args.controller.selection.lastRange,
+      currentSelection,
       'rangeIsInside'
     );
 
