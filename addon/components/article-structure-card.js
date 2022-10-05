@@ -51,6 +51,9 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
 
   @action
   selectionChangedHandler() {
+    if (!this.args.controller.selection.lastRange) {
+      return;
+    }
     const limitedDatastore = this.args.controller.datastore.limitToRange(
       this.args.controller.selection.lastRange,
       'rangeIsInside'
