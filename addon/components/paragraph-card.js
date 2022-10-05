@@ -38,11 +38,12 @@ export default class EditorPluginsParagraphCardComponent extends Component {
 
   @action
   selectionChangedHandler() {
-    if (!this.args.controller.selection.lastRange) {
+    const currentSelection = this.args.controller.selection.lastRange;
+    if (!currentSelection) {
       return;
     }
     const limitedDatastore = this.args.controller.datastore.limitToRange(
-      this.args.controller.selection.lastRange,
+      currentSelection,
       'rangeIsInside'
     );
 
