@@ -103,6 +103,6 @@
     "configPath": "tests/dummy/config"
   },
   "volta": {
-    "node": "14.20.0"
+    "node": "16.17.1"
   }
 }
