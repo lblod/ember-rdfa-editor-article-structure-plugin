@@ -15,6 +15,13 @@ export default class EditorPluginsStructureCardComponent extends Component {
     this.args.controller.addTransactionStepListener(this.onTransactionUpdate);
   }
 
+  willDestroy() {
+    this.args.controller.removeTransactionStepListener(
+      this.onTransactionUpdate
+    );
+    super.willDestroy();
+  }
+
   @action
   moveStructure(moveUp) {
     this.args.controller.perform((tr) => {
@@ -36,9 +43,8 @@ export default class EditorPluginsStructureCardComponent extends Component {
     });
   }
 
-  @action
-  onTransactionUpdate(transaction, steps) {
-    if (modifiesSelection(steps)) {
+  onTransactionUpdate = (transaction, steps) => {
+    if (modifiesSelection(steps) && transaction.currentSelection.lastRange) {
       const limitedDatastore = transaction
         .getCurrentDataStore()
         .limitToRange(transaction.currentSelection.lastRange, 'rangeIsInside');
@@ -82,5 +88,5 @@ export default class EditorPluginsStructureCardComponent extends Component {
         }
       }
     }
-  }
+  };
 }

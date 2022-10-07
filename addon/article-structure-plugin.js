@@ -18,78 +18,77 @@ import RecalculateStructureNumbersCommand from './commands/recalculate-structure
  * @extends EmberService
  */
 export default class ArticleStructurePlugin {
-  /**
-   * Handles the incoming events from the editor dispatcher.  Responsible for generating hint cards.
-   *
-   * @method execute
-   *
-   * @param {string} hrId Unique identifier of the state in the HintsRegistry.  Allows the
-   * HintsRegistry to update absolute selected regions based on what a user has entered in between.
-   * @param {Array} rdfaBlocks Set of logical blobs of content which may have changed.  Each blob is
-   * either has a different semantic meaning, or is logically separated (eg: a separate list item).
-   * @param {Object} hintsRegistry Keeps track of where hints are positioned in the editor.
-   * @param {Object} editor Your public interface through which you can alter the document.
-   *
-   * @public
-   */
-  controller;
-
   get name() {
     return 'article-structure';
   }
 
-  initialize(controller, options) {
-    this.controller = controller;
-    this.controller.perform((tr) => {
-      tr.registerCommand('insertArticle', new InsertArticleCommand());
-      tr.registerCommand('insertParagraph', new InsertParagraphCommand());
-      tr.registerCommand(
-        'insertArticleStructure',
-        new InsertArticleStructureCommand()
-      );
-      tr.registerCommand('moveArticle', new MoveArticleCommand());
-      tr.registerCommand('moveParagraph', new MoveParagraphCommand());
-      tr.registerCommand('moveStructure', new MoveStructureCommand());
-      tr.registerCommand('deleteNodeFromUri', new DeleteNodeFromUriCommand());
-      tr.registerCommand(
-        'recalculate-article-numbers',
-        new RecalculateArticleNumbersCommand()
-      );
+  initialize(transaction, controller, options) {
+    transaction.registerCommand('insertArticle', new InsertArticleCommand());
+    transaction.registerCommand(
+      'insertParagraph',
+      new InsertParagraphCommand()
+    );
+    transaction.registerCommand(
+      'insertArticleStructure',
+      new InsertArticleStructureCommand()
+    );
+    transaction.registerCommand('moveArticle', new MoveArticleCommand());
+    transaction.registerCommand('moveParagraph', new MoveParagraphCommand());
+    transaction.registerCommand('moveStructure', new MoveStructureCommand());
+    transaction.registerCommand(
+      'deleteNodeFromUri',
+      new DeleteNodeFromUriCommand()
+    );
+    transaction.registerCommand(
+      'recalculate-article-numbers',
+      new RecalculateArticleNumbersCommand()
+    );
 
-      tr.registerCommand(
-        'recalculate-paragraph-numbers',
-        new RecalculateParagraphNumbersCommand()
-      );
+    transaction.registerCommand(
+      'recalculate-paragraph-numbers',
+      new RecalculateParagraphNumbersCommand()
+    );
 
-      tr.registerCommand(
-        'recalculate-structure-numbers',
-        new RecalculateStructureNumbersCommand()
-      );
-    });
+    transaction.registerCommand(
+      'recalculate-structure-numbers',
+      new RecalculateStructureNumbersCommand()
+    );
 
-    controller.registerWidget({
-      componentName: 'article-structure-card',
-      identifier: 'article-structure-plugin/card',
-      desiredLocation: 'insertSidebar',
-      widgetArgs: {
-        options: options,
+    transaction.registerWidget(
+      {
+        componentName: 'article-structure-card',
+        identifier: 'article-structure-plugin/card',
+        desiredLocation: 'insertSidebar',
+        widgetArgs: {
+          options: options,
+        },
       },
-    });
-    controller.registerWidget({
-      componentName: 'paragraph-card',
-      identifier: 'article-structure-plugin/paragraph-card',
-      desiredLocation: 'sidebar',
-    });
-    controller.registerWidget({
-      componentName: 'article-card',
-      identifier: 'article-structure-plugin/article-card',
-      desiredLocation: 'sidebar',
-    });
-    controller.registerWidget({
-      componentName: 'structure-card',
-      identifier: 'article-structure-plugin/structure-card',
-      desiredLocation: 'sidebar',
-    });
+      controller
+    );
+    transaction.registerWidget(
+      {
+        componentName: 'paragraph-card',
+        identifier: 'article-structure-plugin/paragraph-card',
+        desiredLocation: 'sidebar',
+      },
+      controller
+    );
+    transaction.registerWidget(
+      {
+        componentName: 'article-card',
+        identifier: 'article-structure-plugin/article-card',
+        desiredLocation: 'sidebar',
+      },
+      controller
+    );
+    transaction.registerWidget(
+      {
+        componentName: 'structure-card',
+        identifier: 'article-structure-plugin/structure-card',
+        desiredLocation: 'sidebar',
+      },
+      controller
+    );
     this.options = options;
   }
 }

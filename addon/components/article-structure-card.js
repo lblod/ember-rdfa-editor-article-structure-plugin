@@ -18,6 +18,13 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
     this.checkStructures = this.checkStructures.bind(this);
   }
 
+  willDestroy() {
+    this.args.controller.removeTransactionStepListener(
+      this.onTransactionUpdate
+    );
+    super.willDestroy();
+  }
+
   @action
   insertArticle() {
     this.args.controller.perform((tr) => {
@@ -49,9 +56,8 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
     });
   }
 
-  @action
-  onTransactionUpdate(transaction, steps) {
-    if (modifiesSelection(steps)) {
+  onTransactionUpdate = (transaction, steps) => {
+    if (modifiesSelection(steps) && transaction.currentSelection.lastRange) {
       const limitedDatastore = transaction
         .getCurrentDataStore()
         .limitToRange(transaction.currentSelection.lastRange, 'rangeIsInside');
@@ -86,7 +92,7 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
       }
       this.checkStructures(transaction);
     }
-  }
+  };
 
   checkStructures(transaction) {
     const newStructures = [...STRUCTURES];

@@ -14,6 +14,13 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     this.args.controller.addTransactionStepListener(this.onTransactionUpdate);
   }
 
+  willDestroy() {
+    this.args.controller.removeTransactionStepListener(
+      this.onTransactionUpdate
+    );
+    super.willDestroy();
+  }
+
   @action
   moveParagraph(moveUp) {
     this.args.controller.perform((tr) => {
@@ -34,9 +41,8 @@ export default class EditorPluginsParagraphCardComponent extends Component {
     });
   }
 
-  @action
-  onTransactionUpdate(transaction, steps) {
-    if (modifiesSelection(steps)) {
+  onTransactionUpdate = (transaction, steps) => {
+    if (modifiesSelection(steps) && transaction.currentSelection.lastRange) {
       const limitedDatastore = transaction
         .getCurrentDataStore()
         .limitToRange(transaction.currentSelection.lastRange, 'rangeIsInside');
@@ -60,5 +66,5 @@ export default class EditorPluginsParagraphCardComponent extends Component {
         });
       }
     }
-  }
+  };
 }
