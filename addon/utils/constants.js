@@ -5,6 +5,7 @@ export const STRUCTURES = [
     type: 'https://say.data.gift/ns/Title',
     heading: 'h3',
     translation: 'insert.title',
+    placeholder: 'placeholder.title',
   },
   {
     uriBase: 'http://data.lblod.info/chapters/',
@@ -12,6 +13,7 @@ export const STRUCTURES = [
     type: 'https://say.data.gift/ns/Chapter',
     heading: 'h4',
     translation: 'insert.chapter',
+    placeholder: 'placeholder.chapter',
   },
   {
     uriBase: 'http://data.lblod.info/sections/',
@@ -19,6 +21,7 @@ export const STRUCTURES = [
     type: 'https://say.data.gift/ns/Section',
     heading: 'h5',
     translation: 'insert.heading',
+    placeholder: 'placeholder.heading',
   },
   {
     uriBase: 'http://data.lblod.info/subsections/',
@@ -26,6 +29,7 @@ export const STRUCTURES = [
     type: 'https://say.data.gift/ns/Subsection',
     heading: 'h6',
     translation: 'insert.subsection',
+    placeholder: 'placeholder.subsection',
   },
 ];
 

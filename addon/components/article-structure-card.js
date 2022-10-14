@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { STRUCTURES } from '../utils/constants';
 import searchForType from '../utils/searchForType';
+import { inject as service } from '@ember/service';
 
 export default class EditorPluginsArticleStructureCardComponent extends Component {
   @tracked isOutsideArticle = true;
@@ -10,6 +11,7 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
   @tracked isOutsideStructure = true;
   @tracked structureUri = undefined;
   @tracked structures = [];
+  @service intl;
 
   constructor() {
     super(...arguments);
@@ -45,7 +47,8 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
       'insert-article-structure',
       this.args.controller,
       structureName,
-      this.args.widgetArgs.options
+      this.args.widgetArgs.options,
+      this.intl
     );
   }
 

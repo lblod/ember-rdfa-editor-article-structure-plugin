@@ -20,3 +20,8 @@ remove:
   article: Remove Article
   paragraph: Remove Paragraph
   structure: Remove Structure
+placeholder:
+  title: Insert title heading
+  chapter: Insert chapter heading
+  heading: Insert section heading
+  subsection: Insert subsection heading
