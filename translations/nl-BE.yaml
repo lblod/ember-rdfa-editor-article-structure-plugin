@@ -20,3 +20,8 @@ remove:
   article: Artikel verwijderen
   paragraph: Paragraaf verwijderen
   structure: Structuur verwijderen
+placeholder:
+  title: Voeg titel in
+  chapter: Voeg hoofdstuk in
+  heading: Voeg afdeling in
+  subsection: Voeg onderafdeling in

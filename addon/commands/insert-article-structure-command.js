@@ -15,7 +15,7 @@ export default class InsertArticleStructureCommand {
     return true;
   }
 
-  execute(controller, structureName, options) {
+  execute(controller, structureName, options, intlService) {
     const rdfaContainer =
       options && options.rdfaContainer
         ? options.rdfaContainer
@@ -92,7 +92,9 @@ export default class InsertArticleStructureCommand {
       const titleHtml = `
         <${structureToAdd.heading} property="say:heading">
           <span property="eli:number" datatype="xsd:string">I</span>.
-          <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
+          <span property="ext:title"><span class="mark-highlight-manual">${intlService.t(
+            structureToAdd.placeholder
+          )}</span></span>
         </${structureToAdd.heading}>
       `;
       controller.executeCommand(
@@ -164,7 +166,9 @@ export default class InsertArticleStructureCommand {
             <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
               contentNode
             )}</span>.
-            <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
+            <span property="ext:title"><span class="mark-highlight-manual">${intlService.t(
+              structureToAdd.placeholder
+            )}</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
@@ -189,7 +193,9 @@ export default class InsertArticleStructureCommand {
             <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
               documentContentNode
             )}</span>.
-            <span property="ext:title"><span class="mark-highlight-manual">Voer inhoud in</span></span>
+            <span property="ext:title"><span class="mark-highlight-manual">${intlService.t(
+              structureToAdd.placeholder
+            )}</span></span>
           </${structureToAdd.heading}>
           <div property="say:body" datatype='rdf:XMLLiteral'>
             <span class="mark-highlight-manual">Voer inhoud in</span>
