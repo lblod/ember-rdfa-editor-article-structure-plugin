@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { structureTypes } from '../utils/constants';
 
 export default class InsertArticleBelowCommand {
   name = 'insert-article-below';
@@ -12,7 +11,7 @@ export default class InsertArticleBelowCommand {
     return true;
   }
 
-  execute(controller, selectedArticleUri, articleContent, options) {
+  execute(controller, selectedArticleUri, articleContent) {
     const articleSubjectNode = controller.datastore
       .match(`>${selectedArticleUri}`, null, null)
       .asSubjectNodes()
