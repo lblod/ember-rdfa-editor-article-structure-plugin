@@ -1,4 +1,5 @@
 import DeleteNodeFromUriCommand from './commands/delete-node-from-uri-command';
+import InsertArticleBelowCommand from './commands/insert-article-below-command';
 import InsertArticleCommand from './commands/insert-article-command';
 import InsertArticleStructureCommand from './commands/insert-article-structure-command';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
@@ -42,6 +43,9 @@ export default class ArticleStructurePlugin {
     this.controller = controller;
     controller.registerCommand(
       new InsertArticleCommand(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new InsertArticleBelowCommand(controller._rawEditor._model)
     );
     controller.registerCommand(
       new InsertParagraphCommand(controller._rawEditor._model)

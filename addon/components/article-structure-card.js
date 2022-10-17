@@ -31,6 +31,17 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
   }
 
   @action
+  insertArticleBelow() {
+    this.args.controller.executeCommand(
+      'insert-article-below',
+      this.args.controller,
+      this.articleUri,
+      undefined,
+      this.args.widgetArgs.options
+    );
+  }
+
+  @action
   insertParagraph() {
     this.args.controller.executeCommand(
       'insert-paragraph',

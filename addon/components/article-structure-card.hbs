@@ -18,6 +18,16 @@
     {{t "insert.paragraph"}}
   </AuButton>
 </AuList::Item>
+<AuList::Item>
+  <AuButton
+    @icon="add"
+    @iconAlignment="left"
+    @skin="link"
+    @disabled={{this.isOutsideArticle}}
+    {{on 'click' this.insertArticleBelow}}>
+    {{t "insert.articleBelow"}}
+  </AuButton>
+</AuList::Item>
 {{#each this.structures as |structure|}}
   <AuList::Item>
     <AuButton
