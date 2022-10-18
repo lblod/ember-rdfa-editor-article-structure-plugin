@@ -1,3 +1,15 @@
+{{#each this.structures as |structure|}}
+  <AuList::Item>
+    <AuButton
+      @icon="add"
+      @iconAlignment="left"
+      @skin="link"
+      @disabled={{false}}
+      {{on 'click' (fn this.insertStructure structure.title)}}>
+      {{t structure.translation}}
+    </AuButton>
+  </AuList::Item>
+{{/each}}
 <AuList::Item>
   <AuButton
     @icon="add"
@@ -18,15 +30,3 @@
     {{t "insert.paragraph"}}
   </AuButton>
 </AuList::Item>
-{{#each this.structures as |structure|}}
-  <AuList::Item>
-    <AuButton
-      @icon="add"
-      @iconAlignment="left"
-      @skin="link"
-      @disabled={{false}}
-      {{on 'click' (fn this.insertStructure structure.title)}}>
-      {{t structure.translation}}
-    </AuButton>
-  </AuList::Item>
-{{/each}}
