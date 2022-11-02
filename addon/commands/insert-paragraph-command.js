@@ -11,7 +11,7 @@ export default class InsertParagraphCommand {
     return true;
   }
 
-  execute(controller, articleUri) {
+  execute(controller, selectedParagraphUri, articleUri) {
     const articleContentObjectNode = controller.datastore
       .match(`>${articleUri}`, '>https://say.data.gift/ns/body', null)
       .asObjectNodes()
@@ -33,14 +33,36 @@ export default class InsertParagraphCommand {
           <span class="mark-highlight-manual">Voer inhoud in</span>
         </div>
       `;
+      if (selectedParagraphUri) {
+        const selectedParagraph = controller.datastore
+          .match(`>${selectedParagraphUri}`, null, null)
+          .asSubjectNodes()
+          .next().value;
+        const selectedParagraphNode = Array.from(selectedParagraph.nodes)[0];
+        controller.executeCommand(
+          'insert-html',
+          paragraphHtml,
+          controller.rangeFactory.fromInElement(
+            articleContentElement,
+            selectedParagraphNode.getOffset() + 1,
+            selectedParagraphNode.getOffset() + 1
+          )
+        );
+      } else {
+        controller.executeCommand(
+          'insert-html',
+          paragraphHtml,
+          controller.rangeFactory.fromInElement(
+            articleContentElement,
+            articleContentElement.getMaxOffset(),
+            articleContentElement.getMaxOffset()
+          )
+        );
+      }
       controller.executeCommand(
-        'insert-html',
-        paragraphHtml,
-        controller.rangeFactory.fromInElement(
-          articleContentElement,
-          articleContentElement.getMaxOffset(),
-          articleContentElement.getMaxOffset()
-        )
+        'recalculate-paragraph-numbers',
+        controller,
+        articleContentElement
       );
     } else {
       const paragraphHtml = `

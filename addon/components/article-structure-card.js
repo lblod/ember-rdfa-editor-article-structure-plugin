@@ -22,23 +22,22 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
 
   @action
   insertArticle() {
-    this.args.controller.executeCommand(
-      'insert-article',
-      this.args.controller,
-      undefined,
-      this.args.widgetArgs.options
-    );
-  }
-
-  @action
-  insertArticleBelow() {
-    this.args.controller.executeCommand(
-      'insert-article-below',
-      this.args.controller,
-      this.articleUri,
-      undefined,
-      this.args.widgetArgs.options
-    );
+    if (this.articleUri) {
+      this.args.controller.executeCommand(
+        'insert-article-below',
+        this.args.controller,
+        this.articleUri,
+        undefined,
+        this.args.widgetArgs.options
+      );
+    } else {
+      this.args.controller.executeCommand(
+        'insert-article',
+        this.args.controller,
+        undefined,
+        this.args.widgetArgs.options
+      );
+    }
   }
 
   @action
@@ -46,6 +45,7 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
     this.args.controller.executeCommand(
       'insert-paragraph',
       this.args.controller,
+      this.paragraphUri,
       this.articleUri
     );
   }
@@ -80,6 +80,16 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
     } else {
       this.isOutsideArticle = false;
       this.articleUri = article.subject.value;
+    }
+
+    const paragrah = limitedDatastore
+      .match(null, 'a', '>https://say.data.gift/ns/Paragraph')
+      .asQuads()
+      .next().value;
+    if (!paragrah) {
+      this.paragraphUri = undefined;
+    } else {
+      this.paragraphUri = paragrah.subject.value;
     }
 
     const documentMatches = limitedDatastore
