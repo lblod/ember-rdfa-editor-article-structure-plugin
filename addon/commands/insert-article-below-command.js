@@ -53,7 +53,4 @@ export default class InsertArticleBelowCommand {
     controller.executeCommand('insert-html', articleHtml, insertRange);
     controller.executeCommand('recalculate-article-numbers', controller);
   }
-  removeZeroWidthSpace(text) {
-    return text.replace(/[\u200B-\u200D\uFEFF]/g, '');
-  }
 }

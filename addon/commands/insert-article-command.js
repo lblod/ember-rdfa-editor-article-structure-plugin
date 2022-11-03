@@ -108,7 +108,4 @@ export default class InsertArticleCommand {
       });
     }
   }
-  removeZeroWidthSpace(text) {
-    return text.replace(/[\u200B-\u200D\uFEFF]/g, '');
-  }
 }
