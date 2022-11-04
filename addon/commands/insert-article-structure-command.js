@@ -151,10 +151,13 @@ export default class InsertArticleStructureCommand {
             break;
           }
         }
+        const structureOfSameTypeNode = Array.from(
+          structureOfSameType.nodes
+        )[0];
         const rangeToInsert = controller.rangeFactory.fromInNode(
           contentNode,
-          contentNode.getMaxOffset(),
-          contentNode.getMaxOffset()
+          structureOfSameTypeNode.getOffset() + 1,
+          structureOfSameTypeNode.getOffset() + 1
         );
         const structureHtml = `
         <div 
@@ -176,12 +179,21 @@ export default class InsertArticleStructureCommand {
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
+        controller.executeCommand(
+          'recalculate-structure-numbers',
+          controller,
+          contentNode,
+          structureToAdd.type
+        );
       } else {
+        const structureOfSameTypeNode = Array.from(
+          structureOfSameType.nodes
+        )[0];
         //Added to the article container
         const rangeToInsert = controller.rangeFactory.fromInNode(
           documentContentNode,
-          documentContentNode.getMaxOffset(),
-          documentContentNode.getMaxOffset()
+          structureOfSameTypeNode.getOffset() + 1,
+          structureOfSameTypeNode.getOffset() + 1
         );
         const structureHtml = `
         <div 
@@ -203,6 +215,12 @@ export default class InsertArticleStructureCommand {
         </div>
       `;
         controller.executeCommand('insert-html', structureHtml, rangeToInsert);
+        controller.executeCommand(
+          'recalculate-structure-numbers',
+          controller,
+          documentContentNode,
+          structureToAdd.type
+        );
       }
     }
     const titleNode = controller.datastore

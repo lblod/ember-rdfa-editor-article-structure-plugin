@@ -1,6 +1,7 @@
 insert:
   paragraph: Insert paragraph
   article: Insert article
+  articleBelow: Insert article below
   title: Insert title
   chapter: Insert chapter
   heading: Insert section

@@ -1,6 +1,7 @@
 insert:
   paragraph: Paragraaf invoegen
   article: Artikel invoegen
+  articleBelow: Voeg onderstaand artikel in
   title: Titel invoegen
   chapter: Hoodfstuk invoegen
   heading: Afdeling invoegen
