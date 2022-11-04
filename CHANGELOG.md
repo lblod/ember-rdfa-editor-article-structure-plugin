@@ -7,6 +7,22 @@
 
 
 
+
+## 0.4.0 (2022-11-04)
+
+#### :rocket: Enhancement
+* [#13](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/13) Add insert article below command ([@lagartoverde](https://github.com/lagartoverde))
+* [#14](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/14) Order the structures hierarchically ([@lagartoverde](https://github.com/lagartoverde))
+* [#12](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/12) Add the name of the structure to the placeholder of the title ([@lagartoverde](https://github.com/lagartoverde))
+
+#### :house: Internal
+* [#10](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/10) Update node to 16.17.1 (latest lts) ([@elpoelma](https://github.com/elpoelma))
+* [#9](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/9) Add release-it packages and release script ([@elpoelma](https://github.com/elpoelma))
+
+#### Committers: 2
+- Elena Poelman ([@elpoelma](https://github.com/elpoelma))
+- Oscar Rodriguez Villalobos ([@lagartoverde](https://github.com/lagartoverde))
+
 ## 0.3.1 (2022-10-05)
 
 #### :bug: Bug Fix
