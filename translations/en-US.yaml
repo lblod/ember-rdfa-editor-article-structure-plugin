@@ -1,28 +1,29 @@
-insert:
-  paragraph: Insert paragraph
-  article: Insert article
-  articleBelow: Insert article below
-  title: Insert title
-  chapter: Insert chapter
-  heading: Insert section
-  subsection: Insert subsection
-move:
-  articleUp: Move Article Up
-  articleDown: Move Article Down
-  paragraphUp: Move Paragraph Up
-  paragraphDown: Move Paragraph Down
-  structureUp: Move Structure Up
-  structureDown: Move Structure Down
-title:
-  paragraphCard: Paragraph Card
-  articleCard: Article Card
-  structureCard: Structure Card
-remove:
-  article: Remove Article
-  paragraph: Remove Paragraph
-  structure: Remove Structure
-placeholder:
-  title: Insert title heading
-  chapter: Insert chapter heading
-  heading: Insert section heading
-  subsection: Insert subsection heading
+articleStructurePlugin:
+  insert:
+    paragraph: Insert paragraph
+    article: Insert article
+    articleBelow: Insert article below
+    title: Insert title
+    chapter: Insert chapter
+    heading: Insert section
+    subsection: Insert subsection
+  move:
+    articleUp: Move Article Up
+    articleDown: Move Article Down
+    paragraphUp: Move Paragraph Up
+    paragraphDown: Move Paragraph Down
+    structureUp: Move Structure Up
+    structureDown: Move Structure Down
+  title:
+    paragraphCard: Paragraph Card
+    articleCard: Article Card
+    structureCard: Structure Card
+  remove:
+    article: Remove Article
+    paragraph: Remove Paragraph
+    structure: Remove Structure
+  placeholder:
+    title: Insert title heading
+    chapter: Insert chapter heading
+    heading: Insert section heading
+    subsection: Insert subsection heading

@@ -17,7 +17,7 @@
     @skin="link"
     @disabled={{false}}
     {{on 'click' this.insertArticle}}>
-    {{t "insert.article"}}
+    {{t "articleStructurePlugin.insert.article"}}
   </AuButton>
 </AuList::Item>
 <AuList::Item>
@@ -27,6 +27,6 @@
     @skin="link"
     @disabled={{this.isOutsideArticle}}
     {{on 'click' this.insertParagraph}}>
-    {{t "insert.paragraph"}}
+    {{t "articleStructurePlugin.insert.paragraph"}}
   </AuButton>
 </AuList::Item>
