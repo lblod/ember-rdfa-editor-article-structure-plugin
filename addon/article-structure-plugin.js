@@ -74,29 +74,43 @@ export default class ArticleStructurePlugin {
     controller.registerCommand(
       new DeleteNodeFromUriCommand(controller._rawEditor._model)
     );
+    const optionsWithDefaults = {
+      findStructureContainer: options.findStructureContainer,
+      articleType: options.articleType,
+      hasPartPredicate: options.hasPartPredicate,
+    };
     controller.registerWidget({
       componentName: 'article-structure-card',
       identifier: 'article-structure-plugin/card',
       desiredLocation: 'insertSidebar',
       widgetArgs: {
-        options: options,
+        options: optionsWithDefaults,
       },
     });
     controller.registerWidget({
       componentName: 'paragraph-card',
       identifier: 'article-structure-plugin/paragraph-card',
       desiredLocation: 'sidebar',
+      widgetArgs: {
+        options: optionsWithDefaults,
+      },
     });
     controller.registerWidget({
       componentName: 'article-card',
       identifier: 'article-structure-plugin/article-card',
       desiredLocation: 'sidebar',
+      widgetArgs: {
+        options: optionsWithDefaults,
+      },
     });
     controller.registerWidget({
       componentName: 'structure-card',
       identifier: 'article-structure-plugin/structure-card',
       desiredLocation: 'sidebar',
+      widgetArgs: {
+        options: optionsWithDefaults,
+      },
     });
-    this.options = options;
+    this.options = optionsWithDefaults;
   }
 }

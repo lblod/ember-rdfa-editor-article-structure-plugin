@@ -9,11 +9,12 @@ export default class RecalculateArticleNumbersCommand {
     return true;
   }
 
-  execute(controller) {
+  execute(controller, options) {
     const articles = controller.datastore
-      .match(null, 'a', '>https://say.data.gift/ns/Article')
+      .match(null, 'a', `>${options.articleType}`)
       .asPredicateNodes()
       .next().value;
+    console.log(articles);
     if (!articles) return;
     const articlesArray = [...articles.nodes];
     for (let i = 0; i < articlesArray.length; i++) {

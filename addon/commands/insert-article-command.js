@@ -13,6 +13,10 @@ export default class InsertArticleCommand {
   }
 
   execute(controller, articleContent, options) {
+    const limitedDatastore = controller.datastore.limitToRange(
+      controller.selection.lastRange,
+      'rangeIsInside'
+    );
     const treeWalker = new controller.treeWalkerFactory({
       root: controller.modelRoot,
       start: controller.selection.lastRange._start.parentElement,
@@ -33,11 +37,8 @@ export default class InsertArticleCommand {
           }
         } else {
           const rdfaContainer =
-            options && options.rdfaContainer
-              ? options.rdfaContainer
-              : 'https://say.data.gift/ns/DocumentContent';
-          const isArticleContainer =
-            node.getAttribute('typeof') === rdfaContainer;
+            options.findStructureContainer(limitedDatastore);
+          const isArticleContainer = node === rdfaContainer;
           if (isArticleContainer) {
             const substructures = node.children.filter((child) =>
               structureTypes.includes(child.getAttribute('typeof'))
@@ -71,7 +72,7 @@ export default class InsertArticleCommand {
     }
     const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
     const articleHtml = `
-      <div property="say:hasPart" typeof="say:Article" resource="${articleUri}">
+      <div property="${options.hasPartPredicate}" typeof="${options.articleType}" resource="${articleUri}">
         <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 
@@ -95,7 +96,7 @@ export default class InsertArticleCommand {
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
-    controller.executeCommand('recalculate-article-numbers', controller);
+    controller.executeCommand('recalculate-article-numbers', controller, options);
     if (newArticleElementSubjectNodes) {
       const newArticleElement = [...newArticleElementSubjectNodes.nodes][0];
       const range = controller.rangeFactory.fromInElement(

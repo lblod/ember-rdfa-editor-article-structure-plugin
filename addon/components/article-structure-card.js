@@ -48,7 +48,8 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
       'insert-paragraph',
       this.args.controller,
       this.paragraphUri,
-      this.articleUri
+      this.articleUri,
+      this.args.widgetArgs.options
     );
   }
 
@@ -73,8 +74,9 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
       currentSelection,
       'rangeIsInside'
     );
+    const options = this.args.widgetArgs.options;
     const article = limitedDatastore
-      .match(null, 'a', '>https://say.data.gift/ns/Article')
+      .match(null, 'a', `>${options.articleType}`)
       .asQuads()
       .next().value;
     if (!article) {

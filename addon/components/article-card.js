@@ -22,7 +22,8 @@ export default class EditorPluginsArticleCardComponent extends Component {
       'move-article',
       this.args.controller,
       this.articleUri,
-      moveUp
+      moveUp,
+      this.args.widgetArgs.options
     );
   }
 
@@ -32,7 +33,8 @@ export default class EditorPluginsArticleCardComponent extends Component {
       'delete-node-from-uri',
       this.args.controller,
       this.articleUri,
-      'article'
+      'article',
+      this.args.widgetArgs.options
     );
   }
 
@@ -46,9 +48,9 @@ export default class EditorPluginsArticleCardComponent extends Component {
       currentSelection,
       'rangeIsInside'
     );
-
+    const options = this.args.widgetArgs.options;
     const article = limitedDatastore
-      .match(null, 'a', '>https://say.data.gift/ns/Article')
+      .match(null, 'a', `>${options.articleType}`)
       .asQuads()
       .next().value;
     if (!article) {

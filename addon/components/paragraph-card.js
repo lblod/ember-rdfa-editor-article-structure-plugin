@@ -22,7 +22,8 @@ export default class EditorPluginsParagraphCardComponent extends Component {
       'move-paragraph',
       this.args.controller,
       this.paragrahUri,
-      moveUp
+      moveUp,
+      this.args.widgetArgs.options
     );
   }
 
@@ -32,7 +33,8 @@ export default class EditorPluginsParagraphCardComponent extends Component {
       'delete-node-from-uri',
       this.args.controller,
       this.paragrahUri,
-      'paragraph'
+      'paragraph',
+      this.args.widgetArgs.options
     );
   }
 

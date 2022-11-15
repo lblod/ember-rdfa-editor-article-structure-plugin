@@ -60,7 +60,7 @@ export default class MoveArticleCommand {
     }
   }
 
-  execute(controller, articleUri, moveUp) {
+  execute(controller, articleUri, moveUp, options) {
     const articleSubjectNode = controller.datastore
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
@@ -90,7 +90,11 @@ export default class MoveArticleCommand {
         mutator.insertNodes(articleBRange, articleAToInsert);
         mutator.insertNodes(articleARange, articleBToInsert);
       });
-      controller.executeCommand('recalculate-article-numbers', controller);
+      controller.executeCommand(
+        'recalculate-article-numbers',
+        controller,
+        options
+      );
       this.model.change(() => {
         const range = controller.rangeFactory.fromInElement(
           articleAToInsert,

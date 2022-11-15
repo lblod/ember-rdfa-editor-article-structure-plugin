@@ -9,7 +9,7 @@ export default class DeleteNodeFromUriCommand {
     return true;
   }
 
-  execute(controller, uri, type) {
+  execute(controller, uri, type, options) {
     const subjectNode = controller.datastore
       .match(`>${uri}`, null, null)
       .asSubjectNodes()
@@ -30,10 +30,19 @@ export default class DeleteNodeFromUriCommand {
         )
       );
     }
-    controller.executeCommand(
-      `recalculate-${type}-numbers`,
-      controller,
-      container
-    );
+    if (type === 'article') {
+      controller.executeCommand(
+        `recalculate-article-numbers`,
+        controller,
+        options
+      );
+    } else {
+      controller.executeCommand(
+        `recalculate-${type}-numbers`,
+        controller,
+        container,
+        options
+      );
+    }
   }
 }

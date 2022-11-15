@@ -5,7 +5,7 @@ export default class MoveParagraphCommand {
     this.model = model;
   }
 
-  canExecute(controller, paragraphUri, moveUp) {
+  canExecute(controller, paragraphUri, moveUp, options) {
     const paragraphSubjectNode = controller.datastore
       .match(`>${paragraphUri}`, null, null)
       .asSubjectNodes()
@@ -26,7 +26,7 @@ export default class MoveParagraphCommand {
       return true;
     } else {
       const articles = controller.datastore
-        .match(null, 'a', '>https://say.data.gift/ns/Article')
+        .match(null, 'a', `>${options.articleType}`)
         .asPredicateNodes()
         .next().value;
       const articlesArray = [...articles.nodes];
@@ -49,7 +49,7 @@ export default class MoveParagraphCommand {
     }
   }
 
-  execute(controller, paragraphUri, moveUp) {
+  execute(controller, paragraphUri, moveUp, options) {
     const paragraphSubjectNode = controller.datastore
       .match(`>${paragraphUri}`, null, null)
       .asSubjectNodes()
@@ -96,7 +96,7 @@ export default class MoveParagraphCommand {
       });
     } else {
       const articles = controller.datastore
-        .match(null, 'a', '>https://say.data.gift/ns/Article')
+        .match(null, 'a', `>${options.articleType}`)
         .asPredicateNodes()
         .next().value;
       const articlesArray = [...articles.nodes];

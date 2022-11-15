@@ -11,7 +11,7 @@ export default class InsertArticleBelowCommand {
     return true;
   }
 
-  execute(controller, selectedArticleUri, articleContent) {
+  execute(controller, selectedArticleUri, articleContent, options) {
     const articleSubjectNode = controller.datastore
       .match(`>${selectedArticleUri}`, null, null)
       .asSubjectNodes()
@@ -31,7 +31,9 @@ export default class InsertArticleBelowCommand {
     );
     const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
     const articleHtml = `
-      <div property="say:hasPart" typeof="say:Article" resource="${articleUri}">
+      <div property="${options.hasPartPredicate}" typeof="${
+      options.articleType
+    }" resource="${articleUri}">
         <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 
@@ -51,6 +53,10 @@ export default class InsertArticleBelowCommand {
       </div>
     `;
     controller.executeCommand('insert-html', articleHtml, insertRange);
-    controller.executeCommand('recalculate-article-numbers', controller);
+    controller.executeCommand(
+      'recalculate-article-numbers',
+      controller,
+      options
+    );
   }
 }

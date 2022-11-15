@@ -16,10 +16,6 @@ export default class InsertArticleStructureCommand {
   }
 
   execute(controller, structureName, options, intlService) {
-    const rdfaContainer =
-      options && options.rdfaContainer
-        ? options.rdfaContainer
-        : 'https://say.data.gift/ns/DocumentContent';
     const structureToAddIndex = STRUCTURES.findIndex(
       (structure) => structure.title === structureName
     );
@@ -34,23 +30,7 @@ export default class InsertArticleStructureCommand {
       limitedDatastore,
       structureToAdd.type
     );
-    const documentContent = limitedDatastore
-      .match(null, 'a', `>${rdfaContainer}`)
-      .asSubjectNodes()
-      .next().value;
-    let documentContentNode;
-    if (!documentContent) {
-      documentContentNode = controller.createModelElement('div');
-      documentContentNode.setAttribute('typeof', rdfaContainer);
-      this.model.change((mutator) => {
-        mutator.insertNodes(
-          controller.selection.lastRange,
-          documentContentNode
-        );
-      });
-    } else {
-      documentContentNode = [...documentContent.nodes][0];
-    }
+    let documentContentNode = options.findStructureContainer(limitedDatastore);
     if (!structureOfSameType) {
       // Needs to wrap everything
       const parentStructureObjectNode = searchForSuperStructure(

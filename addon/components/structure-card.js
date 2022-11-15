@@ -23,7 +23,8 @@ export default class EditorPluginsStructureCardComponent extends Component {
       'move-structure',
       this.args.controller,
       this.structureUri,
-      moveUp
+      moveUp,
+      this.args.widgetArgs.options
     );
   }
 
@@ -33,7 +34,8 @@ export default class EditorPluginsStructureCardComponent extends Component {
       'delete-node-from-uri',
       this.args.controller,
       this.structureUri,
-      'structure'
+      'structure',
+      this.args.widgetArgs.options
     );
   }
 
