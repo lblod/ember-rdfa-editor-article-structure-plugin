@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { structureTypes } from '../utils/constants';
 
 export default class InsertArticleCommand {
   name = 'insert-article';
@@ -25,12 +24,12 @@ export default class InsertArticleCommand {
       visitParentUpwards: true,
       filter: (node) => {
         const isStructureBody = node.getAttribute('property') === 'say:body';
-        const isStructure = structureTypes.includes(
+        const isStructure = options.structureTypes.includes(
           node.parent.getAttribute('typeof')
         );
         if (isStructureBody && isStructure) {
           const substructures = node.children.filter((child) =>
-            structureTypes.includes(child.getAttribute('typeof'))
+            options.structureTypes.includes(child.getAttribute('typeof'))
           );
           if (substructures.length === 0) {
             return 0; // We accept the result
@@ -41,7 +40,7 @@ export default class InsertArticleCommand {
           const isArticleContainer = node === rdfaContainer;
           if (isArticleContainer) {
             const substructures = node.children.filter((child) =>
-              structureTypes.includes(child.getAttribute('typeof'))
+              options.structureTypes.includes(child.getAttribute('typeof'))
             );
             if (!substructures.length) {
               return 0; // We accept the result
@@ -72,7 +71,9 @@ export default class InsertArticleCommand {
     }
     const articleUri = `http://data.lblod.info/artikels/${uuid()}`;
     const articleHtml = `
-      <div property="${options.hasPartPredicate}" typeof="${options.articleType}" resource="${articleUri}">
+      <div property="${options.hasPartPredicate}" typeof="${
+      options.articleType
+    }" resource="${articleUri}">
         <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 
@@ -96,7 +97,11 @@ export default class InsertArticleCommand {
       .match(`>${articleUri}`, null, null)
       .asSubjectNodes()
       .next().value;
-    controller.executeCommand('recalculate-article-numbers', controller, options);
+    controller.executeCommand(
+      'recalculate-article-numbers',
+      controller,
+      options
+    );
     if (newArticleElementSubjectNodes) {
       const newArticleElement = [...newArticleElementSubjectNodes.nodes][0];
       const range = controller.rangeFactory.fromInElement(

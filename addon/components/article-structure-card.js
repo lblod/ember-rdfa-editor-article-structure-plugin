@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { STRUCTURES } from '../utils/constants';
 import searchForType from '../utils/searchForType';
 import { inject as service } from '@ember/service';
 
@@ -115,20 +114,20 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
         this.structureUri = structure.getAttribute('resource');
       }
     }
-    this.checkStructures();
+    this.checkStructures(this.args.widgetArgs.options);
   }
-  checkStructures() {
-    const newStructures = [...STRUCTURES];
+  checkStructures(options) {
+    const newStructures = [...options.structures];
     newStructures[0].disabled = false;
     const limitedDatastore = this.args.controller.datastore.limitToRange(
       this.args.controller.selection.lastRange,
       'rangeIsInside'
     );
-    for (let i = 1; i < STRUCTURES.length; i++) {
+    for (let i = 1; i < options.structures.length; i++) {
       const parentType = searchForType(
         this.args.controller.datastore,
         limitedDatastore,
-        STRUCTURES[i - 1].type
+        options.structures[i - 1].type
       );
       if (parentType) {
         newStructures[i].disabled = false;

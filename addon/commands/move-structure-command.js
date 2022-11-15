@@ -1,5 +1,3 @@
-import { STRUCTURES, structureTypes } from '../utils/constants';
-
 export default class MoveStructureCommand {
   name = 'move-structure';
 
@@ -7,7 +5,7 @@ export default class MoveStructureCommand {
     this.model = model;
   }
 
-  canExecute(controller, structureUri, moveUp) {
+  canExecute(controller, structureUri, moveUp, options) {
     const structureSubjectNode = controller.datastore
       .match(`>${structureUri}`, null, null)
       .asSubjectNodes()
@@ -31,10 +29,10 @@ export default class MoveStructureCommand {
         .match(`>${structureUri}`, 'a', null)
         .asQuads()
         .next().value.object.value;
-      const currentStructureIndex = STRUCTURES.findIndex(
+      const currentStructureIndex = options.structures.findIndex(
         (structure) => structure.type === currentStructureType
       );
-      const parentStructure = STRUCTURES[currentStructureIndex - 1];
+      const parentStructure = options.structures[currentStructureIndex - 1];
       if (!parentStructure) {
         return false;
       }
@@ -44,7 +42,7 @@ export default class MoveStructureCommand {
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure = structureTypes.includes(
+          const isStructure = options.structureTypes.includes(
             node.getAttribute('typeof')
           );
           if (isStructure) {
@@ -65,7 +63,7 @@ export default class MoveStructureCommand {
     }
   }
 
-  execute(controller, structureUri, moveUp) {
+  execute(controller, structureUri, moveUp, options) {
     const structureSubjectNode = controller.datastore
       .match(`>${structureUri}`, null, null)
       .asSubjectNodes()
@@ -117,17 +115,17 @@ export default class MoveStructureCommand {
       });
     } else {
       // Find next parent structure up the chain
-      const currentStructureIndex = STRUCTURES.findIndex(
+      const currentStructureIndex = options.structures.findIndex(
         (structure) => structure.type === currentStructureType
       );
-      const parentStructure = STRUCTURES[currentStructureIndex - 1];
+      const parentStructure = options.structures[currentStructureIndex - 1];
       const treeWalker = new controller.treeWalkerFactory({
         root: controller.modelRoot,
         start: structureNode,
         end: controller.modelRoot,
         reverse: moveUp,
         filter: (node) => {
-          const isStructure = structureTypes.includes(
+          const isStructure = options.structureTypes.includes(
             node.getAttribute('typeof')
           );
           if (isStructure) {

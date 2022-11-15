@@ -1,9 +1,4 @@
-import { structureTypes } from '../utils/constants';
-function searchForSuperStructure(
-  generalDatastore,
-  limitedDatastore,
-  childIndex
-) {
+function searchForSuperStructure(limitedDatastore, childIndex, structureTypes) {
   for (let i = childIndex - 1; i >= 0; i--) {
     const structureType = structureTypes[i];
     const structure = limitedDatastore

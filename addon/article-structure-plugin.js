@@ -9,6 +9,7 @@ import MoveStructureCommand from './commands/move-structure-command';
 import RecalculateArticleNumbersCommand from './commands/recalculate-article-numbers-command';
 import RecalculateParagraphNumbersCommand from './commands/recalculate-paragraph-numbers-command';
 import RecalculateStructureNumbersCommand from './commands/recalculate-structure-numbers-command';
+import { STRUCTURES } from './utils/constants';
 
 /**
  * Entry point for ArticleStructurePlugin
@@ -74,10 +75,28 @@ export default class ArticleStructurePlugin {
     controller.registerCommand(
       new DeleteNodeFromUriCommand(controller._rawEditor._model)
     );
+    const structuresSelected = [];
+    const structuresTypesSelectedByUser = options.structures;
+    for (let type of structuresTypesSelectedByUser) {
+      if (typeof type === 'string') {
+        const defaultStructure = STRUCTURES[type];
+        if (defaultStructure) {
+          structuresSelected.push(defaultStructure);
+        } else {
+          console.warn(
+            `Article Structure Plugin: structure type ${type} not found in the default structure types`
+          );
+        }
+      } else {
+        structuresSelected.push(type);
+      }
+    }
     const optionsWithDefaults = {
       findStructureContainer: options.findStructureContainer,
       articleType: options.articleType,
       hasPartPredicate: options.hasPartPredicate,
+      structures: structuresSelected,
+      structureTypes: structuresSelected.map((structure) => structure.type),
     };
     controller.registerWidget({
       componentName: 'article-structure-card',

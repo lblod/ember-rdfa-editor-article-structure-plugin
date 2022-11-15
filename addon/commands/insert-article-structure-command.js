@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { STRUCTURES, structureTypes } from '../utils/constants';
 import searchForType from '../utils/searchForType';
 import searchForSuperStructure from '../utils/searchForSuperStructure';
 import romanize from '../utils/romanize';
@@ -16,10 +15,10 @@ export default class InsertArticleStructureCommand {
   }
 
   execute(controller, structureName, options, intlService) {
-    const structureToAddIndex = STRUCTURES.findIndex(
+    const structureToAddIndex = options.structures.findIndex(
       (structure) => structure.title === structureName
     );
-    const structureToAdd = STRUCTURES[structureToAddIndex];
+    const structureToAdd = options.structures[structureToAddIndex];
     const structureUri = `${structureToAdd.uriBase}${uuid()}`;
     const limitedDatastore = controller.datastore.limitToRange(
       controller.selection.lastRange,
@@ -34,9 +33,9 @@ export default class InsertArticleStructureCommand {
     if (!structureOfSameType) {
       // Needs to wrap everything
       const parentStructureObjectNode = searchForSuperStructure(
-        controller.datastore,
         limitedDatastore,
-        structureToAddIndex
+        structureToAddIndex,
+        options.structureTypes
       );
       let containerNode;
       if (parentStructureObjectNode) {
@@ -112,7 +111,7 @@ export default class InsertArticleStructureCommand {
       }
     } else {
       // Needs to be added at the end
-      const parentStructure = STRUCTURES[structureToAddIndex - 1];
+      const parentStructure = options.structures[structureToAddIndex - 1];
       const parentStructureType = parentStructure
         ? parentStructure.type
         : undefined;
@@ -147,7 +146,8 @@ export default class InsertArticleStructureCommand {
         >
           <${structureToAdd.heading} property="say:heading">
             <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
-              contentNode
+              contentNode,
+              options
             )}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">${intlService.t(
               structureToAdd.placeholder
@@ -183,7 +183,8 @@ export default class InsertArticleStructureCommand {
         >
           <${structureToAdd.heading} property="say:heading">
             <span property="eli:number" datatype="xsd:string">${this.generateStructureNumber(
-              documentContentNode
+              documentContentNode,
+              options
             )}</span>.
             <span property="ext:title"><span class="mark-highlight-manual">${intlService.t(
               structureToAdd.placeholder
@@ -216,9 +217,9 @@ export default class InsertArticleStructureCommand {
       controller.selection.selectRange(range);
     });
   }
-  generateStructureNumber(container) {
+  generateStructureNumber(container, options) {
     const substructures = container.children.filter((node) =>
-      structureTypes.includes(node.getAttribute('typeof'))
+      options.structureTypes.includes(node.getAttribute('typeof'))
     );
     return romanize(substructures.length + 1);
   }
