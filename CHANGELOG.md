@@ -8,6 +8,15 @@
 
 
 
+
+## 0.4.1 (2022-11-18)
+
+#### :bug: Bug Fix
+* [#15](https://github.com/lblod/ember-rdfa-editor-article-structure-plugin/pull/15) Namespace translations ([@lagartoverde](https://github.com/lagartoverde))
+
+#### Committers: 1
+- Oscar Rodriguez Villalobos ([@lagartoverde](https://github.com/lagartoverde))
+
 ## 0.4.0 (2022-11-04)
 
 #### :rocket: Enhancement
