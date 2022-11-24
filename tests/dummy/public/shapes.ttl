@@ -1,0 +1,14 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix schema: <http://schema.org/> .
+    schema:ArticleShape
+      a sh:NodeShape  ;
+      sh:targetClass <https://say.data.gift/ns/Chapter> ;
+      sh:property [
+                sh:path say:hasPart ;
+                sh:class besluti:Artikel
+      ] .
+        
+      schema:StructureShape
+          a sh:NodeShape  ;
+          sh:targetClass <https://say.data.gift/ns/Chapter> .

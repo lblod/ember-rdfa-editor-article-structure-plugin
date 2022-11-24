@@ -29,9 +29,8 @@ export default class ApplicationController extends Controller {
       name: 'article-structure',
       options: {
         findStructureContainer: testContainerFind,
-        hasPartPredicate: 'eli:has_part',
         articleType: 'http://data.vlaanderen.be/ns/besluit#Artikel',
-        structures: ['chapter', 'title'],
+        structures: ['chapter', 'title', 'article'],
       },
     },
   ];

@@ -2,6 +2,7 @@ import DeleteNodeFromUriCommand from './commands/delete-node-from-uri-command';
 import InsertArticleBelowCommand from './commands/insert-article-below-command';
 import InsertArticleCommand from './commands/insert-article-command';
 import InsertArticleStructureCommand from './commands/insert-article-structure-command';
+import InsertArticleStructureV2Command from './commands/insert-article-structure-v2';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
 import MoveArticleCommand from './commands/move-article-command';
 import MoveParagraphCommand from './commands/move-paragraph-command';
@@ -75,6 +76,9 @@ export default class ArticleStructurePlugin {
     controller.registerCommand(
       new DeleteNodeFromUriCommand(controller._rawEditor._model)
     );
+    controller.registerCommand(
+      new InsertArticleStructureV2Command(controller._rawEditor._model)
+    )
     const structuresSelected = [];
     const structuresTypesSelectedByUser = options.structures;
     for (let type of structuresTypesSelectedByUser) {

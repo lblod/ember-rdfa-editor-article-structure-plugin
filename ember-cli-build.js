@@ -11,6 +11,29 @@ module.exports = function (defaults) {
         'node_modules/@appuniversum/ember-appuniversum/app/styles',
       ],
     },
+    autoImport: {
+      webpack: {
+        node: {
+          global: true,
+          __filename: true,
+          __dirname: true,
+        },
+        module: {
+          rules: [{ test: /\.handlebars$/, loader: 'handlebars-loader' }],
+        },
+        // plugins: [
+        //   new webpack.ProvidePlugin({
+        //     process: 'process/browser'
+        //   })
+        // ],
+        resolve: {
+          fallback: {
+            stream: require.resolve('stream-browserify'),
+            process: require.resolve('process/browser'),
+          },
+        },
+      },
+    },
   });
   /*
     This build file specifies the options for the dummy test app of this

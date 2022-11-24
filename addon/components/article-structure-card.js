@@ -33,9 +33,9 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
       );
     } else {
       this.args.controller.executeCommand(
-        'insert-article',
+        'insert-article-structure-v2',
         this.args.controller,
-        undefined,
+        'Article',
         this.args.widgetArgs.options
       );
     }
