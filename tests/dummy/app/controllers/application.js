@@ -30,7 +30,6 @@ export default class ApplicationController extends Controller {
       options: {
         findStructureContainer: testContainerFind,
         articleType: 'http://data.vlaanderen.be/ns/besluit#Artikel',
-        structures: ['chapter', 'title', 'article'],
       },
     },
   ];
@@ -39,7 +38,7 @@ export default class ApplicationController extends Controller {
   rdfaEditorInit(controller) {
     const presetContent = `
       <div prefix="dct: http://purl.org/dc/terms/ ext: http://mu.semte.ch/vocabularies/ext/ say: https://say.data.gift/ns/">
-        <div typeof="http://test/myTestContainer">
+        <div typeof="http://test/myTestContainer" resource="http://containers/test">
           Insert here
         </div>
       </div>`;

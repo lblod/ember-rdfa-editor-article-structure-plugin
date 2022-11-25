@@ -80,7 +80,7 @@ export default class ArticleStructurePlugin {
       new InsertArticleStructureV2Command(controller._rawEditor._model)
     )
     const structuresSelected = [];
-    const structuresTypesSelectedByUser = options.structures;
+    const structuresTypesSelectedByUser = options.structures || Object.keys(STRUCTURES);
     for (let type of structuresTypesSelectedByUser) {
       if (typeof type === 'string') {
         const defaultStructure = STRUCTURES[type];

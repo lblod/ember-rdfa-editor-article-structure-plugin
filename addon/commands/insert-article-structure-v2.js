@@ -56,27 +56,50 @@ export default class InsertArticleStructureV2Command {
         return 1;
       },
     });
-    const resourceToInsert = treeWalker.nextNode();
-    const resourceToInsertUri = resourceToInsert.getAttribute('resource');
-    console.log(resourceToInsertUri)
-    console.log(structureToAdd.insertPredicate)
-    const nodeToInsertPredicateNodes = controller.datastore
-      .match(
-        `>${resourceToInsertUri}`,
-        `>${structureToAdd.insertPredicate}`,
-        null
-      )
-      .asPredicateNodes().next().value;
-    console.log(nodeToInsertPredicateNodes)
-    console.log(controller.datastore._dataset)
-    const nodeToInsert = [...nodeToInsertPredicateNodes.nodes][0];
-    const structureHtml = structureToAdd.template(structureUri);
+    let resourceToInsert = treeWalker.nextNode();
+    console.log(resourceToInsert);
+    if (!resourceToInsert) {
+      const treeWalkerAscend = new controller.treeWalkerFactory({
+        root: controller.modelRoot,
+        start: controller.selection.lastRange._start.parentElement,
+        end: controller.modelRoot,
+        reverse: true,
+        visitParentUpwards: true,
+        filter: (node) => {
+          const nodeUri = node.getAttribute('resource');
+          if (nodeUri && !urisNotAllowedToInsert.includes(nodeUri)) {
+            return 0;
+          }
+          return 1;
+        },
+      });
+      resourceToInsert = treeWalkerAscend.nextNode();
+    }
+    let nodeToInsert;
+    if (structureToAdd.insertPredicate) {
+      const resourceToInsertUri = resourceToInsert.getAttribute('resource');
+      const nodeToInsertPredicateNodes = controller.datastore
+        .match(
+          `>${resourceToInsertUri}`,
+          `>${structureToAdd.insertPredicate}`,
+          null
+        )
+        .asPredicateNodes()
+        .next().value;
+      console.log(nodeToInsertPredicateNodes);
+      console.log(controller.datastore._dataset);
+      nodeToInsert = [...nodeToInsertPredicateNodes.nodes][0];
+    } else {
+      nodeToInsert = resourceToInsert;
+    }
+    console.log(resourceToInsert);
+    const structureHtml = structureToAdd.template(structureUri, intlService);
     controller.executeCommand(
       'insert-html',
       structureHtml,
       controller.rangeFactory.fromInNode(
         nodeToInsert,
-        0,
+        nodeToInsert.getMaxOffset(),
         nodeToInsert.getMaxOffset()
       )
     );

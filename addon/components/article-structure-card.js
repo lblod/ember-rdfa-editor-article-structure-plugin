@@ -55,7 +55,7 @@ export default class EditorPluginsArticleStructureCardComponent extends Componen
   @action
   insertStructure(structureName) {
     this.args.controller.executeCommand(
-      'insert-article-structure',
+      'insert-article-structure-v2',
       this.args.controller,
       structureName,
       this.args.widgetArgs.options,
