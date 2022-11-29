@@ -10,13 +10,3 @@
     </AuButton>
   </AuList::Item>
 {{/each}}
-<AuList::Item>
-  <AuButton
-    @icon="add"
-    @iconAlignment="left"
-    @skin="link"
-    @disabled={{this.isOutsideArticle}}
-    {{on 'click' this.insertParagraph}}>
-    {{t "articleStructurePlugin.insert.paragraph"}}
-  </AuButton>
-</AuList::Item>

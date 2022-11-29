@@ -1,8 +1,6 @@
 import DeleteNodeFromUriCommand from './commands/delete-node-from-uri-command';
 import InsertArticleStructureV2Command from './commands/insert-article-structure-v2';
-import InsertParagraphCommand from './commands/insert-paragraph-command';
 import MoveStructureCommandV2 from './commands/move-structure-command-v2';
-import RecalculateParagraphNumbersCommand from './commands/recalculate-paragraph-numbers-command';
 import RecalculateStructureNumbersCommandV2 from './commands/recalculate-structure-numbers-command-v2';
 import { STRUCTURES } from './utils/constants';
 
@@ -37,12 +35,6 @@ export default class ArticleStructurePlugin {
 
   initialize(controller, options) {
     this.controller = controller;
-    controller.registerCommand(
-      new InsertParagraphCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateParagraphNumbersCommand(controller._rawEditor._model)
-    );
     controller.registerCommand(
       new DeleteNodeFromUriCommand(controller._rawEditor._model)
     );

@@ -211,4 +211,34 @@ export const STRUCTURES = {
     
     `,
   },
+  paragraph: {
+    uriBase: 'http://data.lblod.info/paragraphs/',
+    title: 'Paragraph',
+    translation: 'articleStructurePlugin.insert.paragraph',
+    moveUp: 'articleStructurePlugin.moveUp.paragrah',
+    moveDown: 'articleStructurePlugin.moveDown.paragrah',
+    type: 'https://say.data.gift/ns/Paragraph',
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
+    insertPredicate: 'https://say.data.gift/ns/body',
+    shaclConstraint: `
+      @prefix sh: <http://www.w3.org/ns/shacl#> .
+      @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+      @prefix schema: <http://schema.org/> .
+      schema:ParagraphShape
+        a sh:NodeShape  ;
+        sh:targetSubjectsOf <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>;
+        sh:property [
+          sh:path <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ;
+          sh:hasValue <http://data.vlaanderen.be/ns/besluit#Artikel>
+        ].
+      `,
+    template: (uri) => `
+      <div property="say:hasParagraph" typeof="say:Paragraph" resource="${uri}">
+        §<span property="eli:number" datatype="xsd:string">
+          <span class="mark-highlight-manual">Voer inhoud in</span>
+        </span>.
+        <span class="mark-highlight-manual">Voer inhoud in</span>
+      </div>
+    `,
+  },
 };

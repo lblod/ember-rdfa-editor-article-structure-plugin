@@ -30,19 +30,31 @@ export default class DeleteNodeFromUriCommand {
         )
       );
     }
-    if (type === 'article') {
-      controller.executeCommand(
-        `recalculate-article-numbers`,
-        controller,
-        options
-      );
-    } else {
-      controller.executeCommand(
-        `recalculate-${type}-numbers`,
-        controller,
-        container,
-        options
-      );
+    const currentStructureType = node.getAttribute('typeof');
+    const currentStructureIndex = options.structures.findIndex((structure) =>
+      currentStructureType.includes(structure.type)
+    );
+    const currentStructure = options.structures[currentStructureIndex];
+    controller.executeCommand(
+      'recalculate-structure-numbers-v2',
+      controller,
+      container,
+      currentStructure,
+      options
+    );
+    this.recalculateContinuousStructures(controller, options);
+  }
+  recalculateContinuousStructures(controller, options) {
+    for (let structure of options.structures) {
+      if (structure.numbering === 'continuous') {
+        controller.executeCommand(
+          'recalculate-structure-numbers-v2',
+          controller,
+          null,
+          structure,
+          options
+        );
+      }
     }
   }
 }

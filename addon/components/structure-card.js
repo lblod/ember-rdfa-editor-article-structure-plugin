@@ -94,8 +94,6 @@ export default class EditorPluginsStructureCardComponent extends Component {
           false,
           this.args.widgetArgs.options
         );
-        console.log(this.canMoveDown)
-        console.log(this.canMoveUp)
       } else {
         this.isOutsideStructure = true;
         this.structureUri = undefined;
