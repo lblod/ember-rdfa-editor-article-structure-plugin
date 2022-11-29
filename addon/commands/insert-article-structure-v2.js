@@ -1,7 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import searchForType from '../utils/searchForType';
-import searchForSuperStructure from '../utils/searchForSuperStructure';
-import romanize from '../utils/romanize';
 import ParserN3 from '@rdfjs/parser-n3';
 import SHACLValidator from 'rdf-validate-shacl';
 import factory from 'rdf-ext';

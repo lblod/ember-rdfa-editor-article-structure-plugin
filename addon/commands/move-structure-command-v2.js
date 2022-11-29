@@ -67,9 +67,12 @@ export default class MoveStructureCommandV2 {
         },
       });
       const nodeToInsert = treeWalker.nextNode();
+      console.log(nodeToInsert);
       if (nodeToInsert) {
+        console.log('true');
         return true;
       } else {
+        console.log('false');
         return false;
       }
     }
@@ -85,13 +88,17 @@ export default class MoveStructureCommandV2 {
     const structures = structureContainer.children.filter(
       (child) => child.modelNodeType === 'ELEMENT'
     );
-    const structureIndex = structures.findIndex(
-      (structure) => structure === structureNode
-    );
     const currentStructureType = controller.datastore
       .match(`>${structureUri}`, 'a', null)
       .asQuads()
       .next().value.object.value;
+    const structureIndex = structures.findIndex(
+      (structure) => structure === structureNode
+    );
+    const currentStructureIndex = options.structures.findIndex(
+      (structure) => structure.type === currentStructureType
+    );
+    const currentStructure = options.structures[currentStructureIndex];
     if (
       ((structureIndex !== 0 && moveUp) ||
         (structureIndex !== structures.length - 1 && !moveUp)) &&
@@ -111,14 +118,14 @@ export default class MoveStructureCommandV2 {
         mutator.insertNodes(structureBRange, structureAToInsert);
         mutator.insertNodes(structureARange, structureBToInsert);
       });
-      /*controller.executeCommand(
-        'recalculate-structure-numbers',
+      controller.executeCommand(
+        'recalculate-structure-numbers-v2',
         controller,
         structureContainer,
         currentStructure,
         options
       );
-      controller.executeCommand('recalculate-article-numbers', controller);*/
+      this.recalculateContinuousStructures(controller, options);
       this.model.change(() => {
         const heading = structureAToInsert.children.find(
           (child) => child.getAttribute('property') === 'say:heading'
@@ -200,7 +207,7 @@ export default class MoveStructureCommandV2 {
             )
           );
         }
-        /*controller.executeCommand(
+        controller.executeCommand(
           'recalculate-structure-numbers-v2',
           controller,
           structureContainer,
@@ -213,9 +220,8 @@ export default class MoveStructureCommandV2 {
           structureContent,
           currentStructure,
           options
-        );*/
-        // Recalculate all continuous structures
-        //controller.executeCommand('recalculate-article-numbers', controller);
+        );
+        this.recalculateContinuousStructures(controller, options);
         this.model.change(() => {
           const heading = insertStructure.children.find(
             (child) => child.getAttribute('property') === 'say:heading'
@@ -223,6 +229,19 @@ export default class MoveStructureCommandV2 {
           const range = controller.rangeFactory.fromInElement(heading, 0, 0);
           controller.selection.selectRange(range);
         });
+      }
+    }
+  }
+  recalculateContinuousStructures(controller, options) {
+    for (let structure of options.structures) {
+      if (structure.numbering === 'continuous') {
+        controller.executeCommand(
+          'recalculate-structure-numbers-v2',
+          controller,
+          null,
+          structure,
+          options
+        );
       }
     }
   }

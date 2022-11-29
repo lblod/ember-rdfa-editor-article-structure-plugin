@@ -5,15 +5,22 @@ articleStructurePlugin:
     articleBelow: Insert article below
     title: Insert title
     chapter: Insert chapter
-    heading: Insert section
+    section: Insert section
     subsection: Insert subsection
-  move:
-    articleUp: Move Article Up
-    articleDown: Move Article Down
-    paragraphUp: Move Paragraph Up
-    paragraphDown: Move Paragraph Down
-    structureUp: Move Structure Up
-    structureDown: Move Structure Down
+  moveUp:
+    paragraph: Move paragraph up
+    article: Move article up
+    title: Move title up
+    chapter: Move chapter up
+    section: Move section up
+    subsection: Move subsection up
+  moveDown:
+    paragraph: Move paragraph down
+    article: Move article down
+    title: Move title down
+    chapter: Move chapter down
+    section: Move section down
+    subsection: Move subsection down
   title:
     paragraphCard: Paragraph Card
     articleCard: Article Card
@@ -25,5 +32,5 @@ articleStructurePlugin:
   placeholder:
     title: Insert title heading
     chapter: Insert chapter heading
-    heading: Insert section heading
+    section: Insert section heading
     subsection: Insert subsection heading

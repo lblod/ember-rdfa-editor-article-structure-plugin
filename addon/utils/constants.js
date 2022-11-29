@@ -9,6 +9,8 @@ export const STRUCTURES = {
     numberingFunction: romanize,
     heading: 'h3',
     translation: 'articleStructurePlugin.insert.title',
+    moveUp: 'articleStructurePlugin.moveUp.title',
+    moveDown: 'articleStructurePlugin.moveDown.title',
     shaclConstraint: `
       @prefix sh: <http://www.w3.org/ns/shacl#> .
       @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -47,6 +49,8 @@ export const STRUCTURES = {
     numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     numberingFunction: romanize,
     translation: 'articleStructurePlugin.insert.chapter',
+    moveUp: 'articleStructurePlugin.moveUp.chapter',
+    moveDown: 'articleStructurePlugin.moveDown.chapter',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
       @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -87,6 +91,8 @@ export const STRUCTURES = {
     numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     numberingFunction: romanize,
     translation: 'articleStructurePlugin.insert.heading',
+    moveUp: 'articleStructurePlugin.moveUp.section',
+    moveDown: 'articleStructurePlugin.moveDown.section',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
       @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -127,6 +133,8 @@ export const STRUCTURES = {
     numberingFunction: romanize,
     numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     translation: 'articleStructurePlugin.insert.subsection',
+    moveUp: 'articleStructurePlugin.moveUp.subsection',
+    moveDown: 'articleStructurePlugin.moveDown.subsection',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
       @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -163,6 +171,8 @@ export const STRUCTURES = {
     uriBase: 'http://data.lblod.info/artikels/',
     title: 'Article',
     translation: 'articleStructurePlugin.insert.article',
+    moveUp: 'articleStructurePlugin.moveUp.article',
+    moveDown: 'articleStructurePlugin.moveDown.article',
     type: 'http://data.vlaanderen.be/ns/besluit#Artikel',
     numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     insertPredicate: 'https://say.data.gift/ns/body',
@@ -184,7 +194,7 @@ export const STRUCTURES = {
         ].
       `,
     template: (uri) => `
-      <div property="say:hasPart" typeof="besluit:Artikel" resource="${uri}">
+      <div property="say:hasPart" typeof="http://data.vlaanderen.be/ns/besluit#Artikel" resource="${uri}">
         <div property="say:heading">
           Artikel 
           <span property="eli:number" datatype="xsd:string"> 

@@ -12,7 +12,7 @@
             @skin="link"
             @disabled={{not this.canMoveUp}}
             {{on 'click' (fn this.moveStructure true)}}>
-            {{t "articleStructurePlugin.move.structureUp"}}
+            {{t this.structureTypeSelected.moveUp}}
           </AuButton>
         </Item>
         <Item>
@@ -22,7 +22,7 @@
             @skin="link"
             @disabled={{not this.canMoveDown}}
             {{on 'click' (fn this.moveStructure false)}}>
-            {{t "articleStructurePlugin.move.structureDown"}}
+            {{t this.structureTypeSelected.moveDown}}
           </AuButton>
         </Item>
         <Item>

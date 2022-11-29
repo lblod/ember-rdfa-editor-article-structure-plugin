@@ -1,13 +1,13 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { structureTypes } from '../utils/constants';
 
 export default class EditorPluginsStructureCardComponent extends Component {
   @tracked isOutsideStructure = true;
   @tracked structureUri = undefined;
   @tracked canMoveUp = false;
   @tracked canMoveDown = false;
+  @tracked structureTypeSelected;
 
   constructor() {
     super(...arguments);
@@ -40,7 +40,7 @@ export default class EditorPluginsStructureCardComponent extends Component {
   }
 
   @action
-  selectionChangedHandler() {
+  async selectionChangedHandler() {
     const currentSelection = this.args.controller.selection.lastRange;
     if (!currentSelection) {
       return;
@@ -74,21 +74,28 @@ export default class EditorPluginsStructureCardComponent extends Component {
         .single();
       if (headingMatch && headingMatch.nodes && headingMatch.nodes.length) {
         this.isOutsideStructure = false;
-        this.structureUri = structure.getAttribute('resource');
-        this.canMoveUp = this.args.controller.canExecuteCommand(
+        this.structureUri = structureUri;
+        const structureTypeof = structure.getAttribute('typeof');
+        this.structureTypeSelected =
+          this.args.widgetArgs.options.structures.find((structure) =>
+            structureTypeof.includes(structure.type)
+          );
+        this.canMoveUp = await this.args.controller.canExecuteCommand(
           'move-structure-v2',
           this.args.controller,
           this.structureUri,
           true,
           this.args.widgetArgs.options
         );
-        this.canMoveDown = this.args.controller.canExecuteCommand(
+        this.canMoveDown = await this.args.controller.canExecuteCommand(
           'move-structure-v2',
           this.args.controller,
           this.structureUri,
           false,
           this.args.widgetArgs.options
         );
+        console.log(this.canMoveDown)
+        console.log(this.canMoveUp)
       } else {
         this.isOutsideStructure = true;
         this.structureUri = undefined;

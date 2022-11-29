@@ -1,16 +1,8 @@
 import DeleteNodeFromUriCommand from './commands/delete-node-from-uri-command';
-import InsertArticleBelowCommand from './commands/insert-article-below-command';
-import InsertArticleCommand from './commands/insert-article-command';
-import InsertArticleStructureCommand from './commands/insert-article-structure-command';
 import InsertArticleStructureV2Command from './commands/insert-article-structure-v2';
 import InsertParagraphCommand from './commands/insert-paragraph-command';
-import MoveArticleCommand from './commands/move-article-command';
-import MoveParagraphCommand from './commands/move-paragraph-command';
-import MoveStructureCommand from './commands/move-structure-command';
 import MoveStructureCommandV2 from './commands/move-structure-command-v2';
-import RecalculateArticleNumbersCommand from './commands/recalculate-article-numbers-command';
 import RecalculateParagraphNumbersCommand from './commands/recalculate-paragraph-numbers-command';
-import RecalculateStructureNumbersCommand from './commands/recalculate-structure-numbers-command';
 import RecalculateStructureNumbersCommandV2 from './commands/recalculate-structure-numbers-command-v2';
 import { STRUCTURES } from './utils/constants';
 
@@ -46,34 +38,10 @@ export default class ArticleStructurePlugin {
   initialize(controller, options) {
     this.controller = controller;
     controller.registerCommand(
-      new InsertArticleCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new InsertArticleBelowCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
       new InsertParagraphCommand(controller._rawEditor._model)
     );
     controller.registerCommand(
-      new InsertArticleStructureCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveArticleCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateArticleNumbersCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveParagraphCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
       new RecalculateParagraphNumbersCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new MoveStructureCommand(controller._rawEditor._model)
-    );
-    controller.registerCommand(
-      new RecalculateStructureNumbersCommand(controller._rawEditor._model)
     );
     controller.registerCommand(
       new DeleteNodeFromUriCommand(controller._rawEditor._model)
@@ -115,22 +83,6 @@ export default class ArticleStructurePlugin {
       componentName: 'article-structure-card',
       identifier: 'article-structure-plugin/card',
       desiredLocation: 'insertSidebar',
-      widgetArgs: {
-        options: optionsWithDefaults,
-      },
-    });
-    controller.registerWidget({
-      componentName: 'paragraph-card',
-      identifier: 'article-structure-plugin/paragraph-card',
-      desiredLocation: 'sidebar',
-      widgetArgs: {
-        options: optionsWithDefaults,
-      },
-    });
-    controller.registerWidget({
-      componentName: 'article-card',
-      identifier: 'article-structure-plugin/article-card',
-      desiredLocation: 'sidebar',
       widgetArgs: {
         options: optionsWithDefaults,
       },
