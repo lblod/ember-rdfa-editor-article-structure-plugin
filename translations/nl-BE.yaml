@@ -4,7 +4,7 @@ articleStructurePlugin:
     article: Artikel invoegen
     articleBelow: Voeg onderstaand artikel in
     title: Titel invoegen
-    chapter: Hoodfstuk invoegen
+    chapter: Hoofdstuk invoegen
     heading: Afdeling invoegen
     subsection: Onderafdeling invoegen
   move:

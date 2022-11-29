@@ -7,9 +7,11 @@ import InsertParagraphCommand from './commands/insert-paragraph-command';
 import MoveArticleCommand from './commands/move-article-command';
 import MoveParagraphCommand from './commands/move-paragraph-command';
 import MoveStructureCommand from './commands/move-structure-command';
+import MoveStructureCommandV2 from './commands/move-structure-command-v2';
 import RecalculateArticleNumbersCommand from './commands/recalculate-article-numbers-command';
 import RecalculateParagraphNumbersCommand from './commands/recalculate-paragraph-numbers-command';
 import RecalculateStructureNumbersCommand from './commands/recalculate-structure-numbers-command';
+import RecalculateStructureNumbersCommandV2 from './commands/recalculate-structure-numbers-command-v2';
 import { STRUCTURES } from './utils/constants';
 
 /**
@@ -78,9 +80,16 @@ export default class ArticleStructurePlugin {
     );
     controller.registerCommand(
       new InsertArticleStructureV2Command(controller._rawEditor._model)
-    )
+    );
+    controller.registerCommand(
+      new RecalculateStructureNumbersCommandV2(controller._rawEditor._model)
+    );
+    controller.registerCommand(
+      new MoveStructureCommandV2(controller._rawEditor._model)
+    );
     const structuresSelected = [];
-    const structuresTypesSelectedByUser = options.structures || Object.keys(STRUCTURES);
+    const structuresTypesSelectedByUser =
+      options.structures || Object.keys(STRUCTURES);
     for (let type of structuresTypesSelectedByUser) {
       if (typeof type === 'string') {
         const defaultStructure = STRUCTURES[type];

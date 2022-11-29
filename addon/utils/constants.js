@@ -1,8 +1,12 @@
+import romanize from './romanize';
+
 export const STRUCTURES = {
   title: {
     uriBase: 'http://data.lblod.info/titles/',
     title: 'Title',
-    type: 'https://say.data.gift/ns/Title https://say.data.gift/ns/ArticleContainer',
+    type: 'https://say.data.gift/ns/Title',
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
+    numberingFunction: romanize,
     heading: 'h3',
     translation: 'articleStructurePlugin.insert.title',
     shaclConstraint: `
@@ -39,6 +43,9 @@ export const STRUCTURES = {
   chapter: {
     uriBase: 'http://data.lblod.info/chapters/',
     title: 'Chapter',
+    type: 'https://say.data.gift/ns/Chapter',
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
+    numberingFunction: romanize,
     translation: 'articleStructurePlugin.insert.chapter',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
@@ -76,6 +83,9 @@ export const STRUCTURES = {
     uriBase: 'http://data.lblod.info/sections/',
     title: 'Section',
     heading: 'h5',
+    type: 'https://say.data.gift/ns/Section',
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
+    numberingFunction: romanize,
     translation: 'articleStructurePlugin.insert.heading',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
@@ -113,6 +123,9 @@ export const STRUCTURES = {
     uriBase: 'http://data.lblod.info/subsections/',
     title: 'Subsection',
     heading: 'h6',
+    type: 'https://say.data.gift/ns/Subsection',
+    numberingFunction: romanize,
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     translation: 'articleStructurePlugin.insert.subsection',
     insertPredicate: 'https://say.data.gift/ns/body',
     shaclConstraint: `
@@ -150,7 +163,10 @@ export const STRUCTURES = {
     uriBase: 'http://data.lblod.info/artikels/',
     title: 'Article',
     translation: 'articleStructurePlugin.insert.article',
+    type: 'http://data.vlaanderen.be/ns/besluit#Artikel',
+    numberPredicate: 'http://data.europa.eu/eli/ontology#number',
     insertPredicate: 'https://say.data.gift/ns/body',
+    numbering: 'continuous',
     shaclConstraint: `
       @prefix sh: <http://www.w3.org/ns/shacl#> .
       @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .

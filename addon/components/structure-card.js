@@ -20,7 +20,7 @@ export default class EditorPluginsStructureCardComponent extends Component {
   @action
   moveStructure(moveUp) {
     this.args.controller.executeCommand(
-      'move-structure',
+      'move-structure-v2',
       this.args.controller,
       this.structureUri,
       moveUp,
@@ -54,7 +54,9 @@ export default class EditorPluginsStructureCardComponent extends Component {
       .match(null, 'a', null)
       .transformDataset((dataset) => {
         return dataset.filter((quad) => {
-          return structureTypes.includes(quad.object.value);
+          return this.args.widgetArgs.options.structureTypes.includes(
+            quad.object.value
+          );
         });
       })
       .asPredicateNodeMapping()
@@ -74,16 +76,18 @@ export default class EditorPluginsStructureCardComponent extends Component {
         this.isOutsideStructure = false;
         this.structureUri = structure.getAttribute('resource');
         this.canMoveUp = this.args.controller.canExecuteCommand(
-          'move-structure',
+          'move-structure-v2',
           this.args.controller,
           this.structureUri,
-          true
+          true,
+          this.args.widgetArgs.options
         );
         this.canMoveDown = this.args.controller.canExecuteCommand(
-          'move-structure',
+          'move-structure-v2',
           this.args.controller,
           this.structureUri,
-          false
+          false,
+          this.args.widgetArgs.options
         );
       } else {
         this.isOutsideStructure = true;

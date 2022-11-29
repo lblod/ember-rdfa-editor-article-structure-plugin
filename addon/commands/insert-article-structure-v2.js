@@ -92,7 +92,6 @@ export default class InsertArticleStructureV2Command {
     } else {
       nodeToInsert = resourceToInsert;
     }
-    console.log(resourceToInsert);
     const structureHtml = structureToAdd.template(structureUri, intlService);
     controller.executeCommand(
       'insert-html',
@@ -102,6 +101,13 @@ export default class InsertArticleStructureV2Command {
         nodeToInsert.getMaxOffset(),
         nodeToInsert.getMaxOffset()
       )
+    );
+    controller.executeCommand(
+      'recalculate-structure-numbers-v2',
+      controller,
+      nodeToInsert,
+      structureToAdd,
+      options
     );
   }
 }
