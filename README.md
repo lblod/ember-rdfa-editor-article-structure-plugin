@@ -1,5 +1,5 @@
 # ember-rdfa-editor-article-structure-plugin
-
+:warning: This ember addon is no longer maintained. Please use [@lblod/ember-rdfa-editor-lblod-plugins](https://github.com/lblod/ember-rdfa-editor-lblod-plugins) instead.
 
 Plugin that provides some helpers for interacting with besluit inside GN
 
